@@ -208,7 +208,7 @@
 	#define CONFIG_LIBATA
 #endif
 
-/* Framebuffer and LCD 
+/* Framebuffer and LCD  
 #define CONFIG_PREBOOT
 #define CONFIG_VIDEO
 #define CONFIG_VIDEO_IPUV3
