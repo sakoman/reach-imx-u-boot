@@ -1107,6 +1107,7 @@ extern unsigned int __machine_arch_type;
 #define MACH_TYPE_OMAP5_SEVM           3777
 #define MACH_TYPE_ARMADILLO_800EVA     3863
 #define MACH_TYPE_KZM9G                4140
+#define MACH_TYPE_MX53_SELLWOOD        4194
 
 #ifdef CONFIG_ARCH_EBSA110
 # ifdef machine_arch_type
@@ -14246,6 +14247,18 @@ extern unsigned int __machine_arch_type;
 # define machine_is_kzm9g()	(machine_arch_type == MACH_TYPE_KZM9G)
 #else
 # define machine_is_kzm9g()	(0)
+#endif
+
+#ifdef CONFIG_MACH_MX53_SELLWOOD
+# ifdef machine_arch_type
+#  undef machine_arch_type
+#  define machine_arch_type	__machine_arch_type
+# else
+#  define machine_arch_type	MACH_TYPE_MX53_SELLWOOD
+# endif
+# define machine_is_mx53_sellwood()	(machine_arch_type == MACH_TYPE_MX53_SELLWOOD)
+#else
+# define machine_is_mx53_sellwood()	(0)
 #endif
 
 /*
