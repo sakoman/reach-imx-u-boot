@@ -199,8 +199,6 @@ int board_mmc_init(bd_t *bis)
 						IOMUX_CONFIG_ALT0);
 			mxc_request_iomux(MX53_PIN_SD1_DATA3,
 						IOMUX_CONFIG_ALT0);
-			mxc_request_iomux(MX53_PIN_EIM_DA13,
-						IOMUX_CONFIG_ALT1);
 
 			mxc_iomux_set_pad(MX53_PIN_SD1_CMD,
 				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
@@ -228,66 +226,38 @@ int board_mmc_init(bd_t *bis)
 				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
 			break;
 		case 1:
-			mxc_request_iomux(MX53_PIN_ATA_RESET_B,
-						IOMUX_CONFIG_ALT2);
-			mxc_request_iomux(MX53_PIN_ATA_IORDY,
-						IOMUX_CONFIG_ALT2);
-			mxc_request_iomux(MX53_PIN_ATA_DATA8,
-						IOMUX_CONFIG_ALT4);
-			mxc_request_iomux(MX53_PIN_ATA_DATA9,
-						IOMUX_CONFIG_ALT4);
-			mxc_request_iomux(MX53_PIN_ATA_DATA10,
-						IOMUX_CONFIG_ALT4);
-			mxc_request_iomux(MX53_PIN_ATA_DATA11,
-						IOMUX_CONFIG_ALT4);
-			mxc_request_iomux(MX53_PIN_ATA_DATA0,
-						IOMUX_CONFIG_ALT4);
-			mxc_request_iomux(MX53_PIN_ATA_DATA1,
-						IOMUX_CONFIG_ALT4);
-			mxc_request_iomux(MX53_PIN_ATA_DATA2,
-						IOMUX_CONFIG_ALT4);
-			mxc_request_iomux(MX53_PIN_ATA_DATA3,
-						IOMUX_CONFIG_ALT4);
-			mxc_request_iomux(MX53_PIN_EIM_DA11,
-						IOMUX_CONFIG_ALT1);
+			mxc_request_iomux(MX53_PIN_SD2_CMD, IOMUX_CONFIG_ALT0);
+			mxc_request_iomux(MX53_PIN_SD2_CLK, IOMUX_CONFIG_ALT0);
+			mxc_request_iomux(MX53_PIN_SD2_DATA0,
+						IOMUX_CONFIG_ALT0);
+			mxc_request_iomux(MX53_PIN_SD2_DATA1,
+						IOMUX_CONFIG_ALT0);
+			mxc_request_iomux(MX53_PIN_SD2_DATA2,
+						IOMUX_CONFIG_ALT0);
+			mxc_request_iomux(MX53_PIN_SD2_DATA3,
+						IOMUX_CONFIG_ALT0);
 
-			mxc_iomux_set_pad(MX53_PIN_ATA_RESET_B,
+			mxc_iomux_set_pad(MX53_PIN_SD2_CMD,
 				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
 				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
 				PAD_CTL_HYS_ENABLE | PAD_CTL_100K_PU);
-			mxc_iomux_set_pad(MX53_PIN_ATA_IORDY,
+			mxc_iomux_set_pad(MX53_PIN_SD2_CLK,
 				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
 				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU |
 				PAD_CTL_DRV_HIGH);
-			mxc_iomux_set_pad(MX53_PIN_ATA_DATA8,
+			mxc_iomux_set_pad(MX53_PIN_SD2_DATA0,
 				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
 				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
 				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
-			mxc_iomux_set_pad(MX53_PIN_ATA_DATA9,
+			mxc_iomux_set_pad(MX53_PIN_SD2_DATA1,
 				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
 				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
 				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
-			mxc_iomux_set_pad(MX53_PIN_ATA_DATA10,
+			mxc_iomux_set_pad(MX53_PIN_SD2_DATA2,
 				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
 				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
 				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
-			mxc_iomux_set_pad(MX53_PIN_ATA_DATA11,
-				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
-				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
-				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
-			mxc_iomux_set_pad(MX53_PIN_ATA_DATA0,
-				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
-				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
-				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
-			mxc_iomux_set_pad(MX53_PIN_ATA_DATA1,
-				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
-				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
-				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
-			mxc_iomux_set_pad(MX53_PIN_ATA_DATA2,
-				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
-				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
-				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
-			mxc_iomux_set_pad(MX53_PIN_ATA_DATA3,
+			mxc_iomux_set_pad(MX53_PIN_SD2_DATA3,
 				PAD_CTL_HYS_ENABLE | PAD_CTL_DRV_HIGH |
 				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
 				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
