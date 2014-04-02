@@ -1105,6 +1105,7 @@ extern unsigned int __machine_arch_type;
 #define MACH_TYPE_ATDGP318             3494
 #define MACH_TYPE_OMAP5_SEVM           3777
 #define MACH_TYPE_ARMADILLO_800EVA     3863
+#define MACH_TYPE_MX28G2C              4006
 #define MACH_TYPE_KZM9G                4140
 
 #ifdef CONFIG_ARCH_EBSA110
@@ -14233,6 +14234,18 @@ extern unsigned int __machine_arch_type;
 # define machine_is_kzm9g()	(machine_arch_type == MACH_TYPE_KZM9G)
 #else
 # define machine_is_kzm9g()	(0)
+#endif
+
+#ifdef CONFIG_MACH_MX28G2C
+# ifdef machine_arch_type
+#  undef machine_arch_type
+#  define machine_arch_type __machine_arch_type
+# else
+#  define machine_arch_type MACH_TYPE_MX28G2C
+# endif
+# define machine_is_mx28g2c()	(machine_arch_type == MACH_TYPE_MX28G2C)
+#else
+# define machine_is_mx28g2c()	(0)
 #endif
 
 /*
