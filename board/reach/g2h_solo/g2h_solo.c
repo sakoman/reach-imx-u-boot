@@ -197,6 +197,22 @@ static int mx6_rgmii_rework(struct phy_device *phydev)
 	return 0;
 }
 
+#ifdef CONFIG_MXC_SPI
+iomux_v3_cfg_t const ecspi1_pads[] = {
+	/* SS1 */
+	MX6_PAD_EIM_D19__GPIO3_IO24   | MUX_PAD_CTRL(SPI_PAD_CTRL),
+	MX6_PAD_EIM_D17__ECSPI1_MISO | MUX_PAD_CTRL(SPI_PAD_CTRL),
+	MX6_PAD_EIM_D18__ECSPI1_MOSI | MUX_PAD_CTRL(SPI_PAD_CTRL),
+	MX6_PAD_EIM_D16__ECSPI1_SCLK | MUX_PAD_CTRL(SPI_PAD_CTRL),
+};
+
+void setup_spi(void)
+{
+	imx_iomux_v3_setup_multiple_pads(ecspi1_pads,
+					 ARRAY_SIZE(ecspi1_pads));
+}
+#endif
+
 int board_phy_config(struct phy_device *phydev)
 {
 	mx6_rgmii_rework(phydev);
