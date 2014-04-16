@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2013 Freescale Semiconductor, Inc.
+ * Copyright (C) 2013 Reach Technology.
  *
- * Author: Fabio Estevam <fabio.estevam@freescale.com>
+ * Author: Jeff Hormn <jhorn@reachtech.com>
  *
  * SPDX-License-Identifier:	GPL-2.0+
  */
