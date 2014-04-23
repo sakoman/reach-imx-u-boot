@@ -39,6 +39,9 @@ DECLARE_GLOBAL_DATA_PTR;
 #define ENET_PAD_CTRL  (PAD_CTL_PUS_100K_UP |			\
 	PAD_CTL_SPEED_MED | PAD_CTL_DSE_40ohm | PAD_CTL_HYS)
 
+#define SPI_PAD_CTRL (PAD_CTL_HYS | PAD_CTL_SPEED_MED | \
+	PAD_CTL_DSE_40ohm | PAD_CTL_SRE_FAST)
+
 #define USDHC1_CD_GPIO		IMX_GPIO_NR(1, 2)
 #define USDHC3_CD_GPIO		IMX_GPIO_NR(3, 9)
 #define ETH_PHY_RESET		IMX_GPIO_NR(3, 29)
@@ -199,8 +202,10 @@ static int mx6_rgmii_rework(struct phy_device *phydev)
 
 #ifdef CONFIG_MXC_SPI
 iomux_v3_cfg_t const ecspi1_pads[] = {
-	/* SS1 */
-	MX6_PAD_EIM_D19__GPIO3_IO24   | MUX_PAD_CTRL(SPI_PAD_CTRL),
+	/* CS */
+	//MX6_PAD_EIM_D24__ECSPI1_SS2	 | MUX_PAD_CTRL(SPI_PAD_CTRL),
+	/* GPIO CS */
+	MX6_PAD_EIM_D24__GPIO3_IO24  | MUX_PAD_CTRL(NO_PAD_CTRL),
 	MX6_PAD_EIM_D17__ECSPI1_MISO | MUX_PAD_CTRL(SPI_PAD_CTRL),
 	MX6_PAD_EIM_D18__ECSPI1_MOSI | MUX_PAD_CTRL(SPI_PAD_CTRL),
 	MX6_PAD_EIM_D16__ECSPI1_SCLK | MUX_PAD_CTRL(SPI_PAD_CTRL),
@@ -318,6 +323,10 @@ int board_init(void)
 {
 	/* address of boot parameters */
 	gd->bd->bi_boot_params = PHYS_SDRAM + 0x100;
+
+#ifdef CONFIG_MXC_SPI
+	setup_spi();
+#endif
 
 	return 0;
 }
