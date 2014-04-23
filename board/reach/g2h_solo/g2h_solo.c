@@ -200,7 +200,6 @@ static int mx6_rgmii_rework(struct phy_device *phydev)
 	return 0;
 }
 
-#ifdef CONFIG_MXC_SPI
 iomux_v3_cfg_t const ecspi1_pads[] = {
 	/* CS */
 	//MX6_PAD_EIM_D24__ECSPI1_SS2	 | MUX_PAD_CTRL(SPI_PAD_CTRL),
@@ -216,7 +215,6 @@ void setup_spi(void)
 	imx_iomux_v3_setup_multiple_pads(ecspi1_pads,
 					 ARRAY_SIZE(ecspi1_pads));
 }
-#endif
 
 int board_phy_config(struct phy_device *phydev)
 {
@@ -324,9 +322,7 @@ int board_init(void)
 	/* address of boot parameters */
 	gd->bd->bi_boot_params = PHYS_SDRAM + 0x100;
 
-#ifdef CONFIG_MXC_SPI
 	setup_spi();
-#endif
 
 	return 0;
 }
