@@ -1,0 +1,16 @@
+bootdelay=5
+autoload=no
+console=ttymxc0
+baudrate=115200
+image=zImage
+loadaddr=0x12000000
+ethact=FEC
+ethprime=FEC
+mmcargs=setenv bootargs console=${console},${baudrate} root=${mmcroot}
+mmcroot=/dev/mmcblk0p2 rootwait rw
+loadkernel=sf read {loadaddr} 0x100000 0x300000
+bootcmd_tftp=run mmcargs; dhcp; tftp ${loadaddr} ${image}; bootz;
+bootcmd_nor=run mmcargs; run loadkernel; bootz;
+bootcmd=run bootcmd_nor;
+ethaddr=30:68:8C:10:10:10
+serverip=192.168.0.151
