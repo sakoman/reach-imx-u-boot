@@ -45,6 +45,10 @@
 #include <config_cmd_default.h>
 
 #undef CONFIG_CMD_IMLS
+#define CONFIG_CMD_FUSE
+#ifdef CONFIG_CMD_FUSE
+#define CONFIG_MXC_OCOTP
+#endif
 
 #define CONFIG_CMD_BMODE
 #define CONFIG_CMD_SETEXPR
