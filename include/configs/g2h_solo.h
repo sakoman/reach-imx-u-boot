@@ -12,7 +12,7 @@
 #include "mx6_common.h"
 #include <asm/arch/imx-regs.h>
 #include <asm/imx-common/gpio.h>
-#include <asm/sizes.h>
+#include <linux/sizes.h>
 
 #define CONFIG_MX6
 #define CONFIG_DISPLAY_CPUINFO
@@ -32,6 +32,9 @@
 #define CONFIG_BOARD_EARLY_INIT_F
 #define CONFIG_BOARD_LATE_INIT
 #define CONFIG_MXC_GPIO
+#ifdef CONFIG_MXC_GPIO
+#define CONFIG_CMD_GPIO
+#endif
 
 #define CONFIG_MXC_UART
 #define CONFIG_MXC_UART_BASE		UART1_BASE
@@ -63,7 +66,7 @@
 /* MMC Configuration */
 #define CONFIG_FSL_ESDHC
 #define CONFIG_FSL_USDHC
-#define CONFIG_SYS_FSL_USDHC_NUM	1
+#define CONFIG_SYS_FSL_USDHC_NUM	2
 #define CONFIG_SYS_FSL_ESDHC_ADDR	0
 
 #define CONFIG_MMC
@@ -84,9 +87,10 @@
 #define IMX_FEC_BASE			ENET_BASE_ADDR
 #define CONFIG_FEC_XCV_TYPE		RGMII
 #define CONFIG_ETHPRIME			"FEC"
-#define CONFIG_FEC_MXC_PHYADDR		1
+#define CONFIG_FEC_MXC_PHYADDR  1
 #define CONFIG_PHYLIB
-#define CONFIG_PHY_ATHEROS
+#define CONFIG_PHY_MICREL
+#define CONFIG_PHY_MICREL_KSZ9031
 
 /* SPI NOR */
 #define CONFIG_CMD_SF
