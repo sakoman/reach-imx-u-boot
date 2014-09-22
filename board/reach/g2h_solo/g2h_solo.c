@@ -256,6 +256,13 @@ int board_phy_config(struct phy_device *phydev)
 				   MII_KSZ9031_EXT_RGMII_CLOCK_SKEW,
 				   MII_KSZ9031_MOD_DATA_NO_POST_INC, 0x01EB);
 
+    /* set MMD to improve link up time*/ 
+    phy_write(phydev, 0x02, 0x0, 0x2100); 
+    udelay(1000); 
+	ksz9031_phy_extended_write(phydev, 0x01, 0x5A, 0x4001, 0x0106);
+    udelay(1000); 
+    phy_write(phydev, 0x02, 0x0, 0x1140); 
+
 	if (phydev->drv->config)
 		phydev->drv->config(phydev);
 
