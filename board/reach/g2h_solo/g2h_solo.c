@@ -237,32 +237,33 @@ void setup_spi(void)
 					 ARRAY_SIZE(ecspi1_pads));
 }
 
+static int mx6_rgmii_rework(struct phy_device *phydev)
+{
+	unsigned short val;
+
+	/* To enable AR8031 ouput a 125MHz clk from CLK_25M */
+	phy_write(phydev, MDIO_DEVAD_NONE, 0xd, 0x7);
+	phy_write(phydev, MDIO_DEVAD_NONE, 0xe, 0x8016);
+	phy_write(phydev, MDIO_DEVAD_NONE, 0xd, 0x4007);
+
+	val = phy_read(phydev, MDIO_DEVAD_NONE, 0xe);
+	val &= 0xffe3;
+	val |= 0x18;
+	phy_write(phydev, MDIO_DEVAD_NONE, 0xe, val);
+
+	/* introduce tx clock delay */
+	phy_write(phydev, MDIO_DEVAD_NONE, 0x1d, 0x5);
+	val = phy_read(phydev, MDIO_DEVAD_NONE, 0x1e);
+	val |= 0x0100;
+	phy_write(phydev, MDIO_DEVAD_NONE, 0x1e, val);
+
+	return 0;
+}
+
 int board_phy_config(struct phy_device *phydev)
 {
-	/* control data pad skew - devaddr = 0x02, register = 0x04 */
-	ksz9031_phy_extended_write(phydev, 0x02,
-				   MII_KSZ9031_EXT_RGMII_CTRL_SIG_SKEW,
-				   MII_KSZ9031_MOD_DATA_NO_POST_INC, 0x0000);
-	/* rx data pad skew - devaddr = 0x02, register = 0x05 */
-	ksz9031_phy_extended_write(phydev, 0x02,
-				   MII_KSZ9031_EXT_RGMII_RX_DATA_SKEW,
-				   MII_KSZ9031_MOD_DATA_NO_POST_INC, 0x0000);
-	/* tx data pad skew - devaddr = 0x02, register = 0x05 */
-	ksz9031_phy_extended_write(phydev, 0x02,
-				   MII_KSZ9031_EXT_RGMII_TX_DATA_SKEW,
-				   MII_KSZ9031_MOD_DATA_NO_POST_INC, 0x0000);
-	/* gtx and rx clock pad skew - devaddr = 0x02, register = 0x08 */
-	ksz9031_phy_extended_write(phydev, 0x02,
-				   MII_KSZ9031_EXT_RGMII_CLOCK_SKEW,
-				   MII_KSZ9031_MOD_DATA_NO_POST_INC, 0x01EB);
-
-    /* set MMD to improve link up time*/ 
-    phy_write(phydev, 0x02, 0x0, 0x2100); 
-    udelay(1000); 
-	ksz9031_phy_extended_write(phydev, 0x01, 0x5A, 0x4001, 0x0106);
-    udelay(1000); 
-    phy_write(phydev, 0x02, 0x0, 0x1140); 
-
+    mx6_rgmii_rework(phydev);
+	
 	if (phydev->drv->config)
 		phydev->drv->config(phydev);
 
