@@ -45,6 +45,7 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define USDHC3_CD_GPIO		IMX_GPIO_NR(1, 2)
 #define USDHC2_CD_GPIO		IMX_GPIO_NR(1, 4)
+#define ETH_PHY_RESET		IMX_GPIO_NR(1, 25)
 
 int dram_init(void)
 {
@@ -87,7 +88,7 @@ static iomux_v3_cfg_t const usdhc3_pads[] = {
 	MX6_PAD_GPIO_2__GPIO1_IO02      | MUX_PAD_CTRL(NO_PAD_CTRL),
 };
 
-iomux_v3_cfg_t const enet_pads1[] = {
+iomux_v3_cfg_t const enet_pads[] = {
 	MX6_PAD_ENET_MDIO__ENET_MDIO		| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_ENET_MDC__ENET_MDC		| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_TXC__RGMII_TXC	| MUX_PAD_CTRL(ENET_PAD_CTRL),
@@ -98,26 +99,13 @@ iomux_v3_cfg_t const enet_pads1[] = {
 	MX6_PAD_RGMII_TX_CTL__RGMII_TX_CTL	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_ENET_REF_CLK__ENET_TX_CLK	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_RXC__RGMII_RXC	| MUX_PAD_CTRL(ENET_PAD_CTRL),
-	/* RGMII reset */
-	MX6_PAD_EIM_D29__GPIO3_IO29		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	/* pin 32 - 1 - (MODE0) all */
-	MX6_PAD_RGMII_RD0__GPIO6_IO25		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	/* pin 31 - 1 - (MODE1) all */
-	MX6_PAD_RGMII_RD1__GPIO6_IO27		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	/* pin 28 - 1 - (MODE2) all */
-	MX6_PAD_RGMII_RD2__GPIO6_IO28		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	/* pin 27 - 1 - (MODE3) all */
-	MX6_PAD_RGMII_RD3__GPIO6_IO29		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	/* pin 33 - 1 - (CLK125_EN) 125Mhz clockout enabled */
-	MX6_PAD_RGMII_RX_CTL__GPIO6_IO24	| MUX_PAD_CTRL(NO_PAD_CTRL),
-};
-
-static iomux_v3_cfg_t const enet_pads2[] = {
 	MX6_PAD_RGMII_RD0__RGMII_RD0	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_RD1__RGMII_RD1	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_RD2__RGMII_RD2	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_RD3__RGMII_RD3	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_RX_CTL__RGMII_RX_CTL	| MUX_PAD_CTRL(ENET_PAD_CTRL),
+	/* AR8031 PHY Reset */
+	MX6_PAD_ENET_CRS_DV__GPIO1_IO25		| MUX_PAD_CTRL(NO_PAD_CTRL),
 };
 
 static void setup_iomux_dipswitch(void)
@@ -133,30 +121,13 @@ static void setup_iomux_uart(void)
 static void setup_iomux_enet(void)
 {
 
-	imx_iomux_v3_setup_multiple_pads(enet_pads1, ARRAY_SIZE(enet_pads1));
-	udelay(20);
-	gpio_direction_output(IMX_GPIO_NR(3, 29), 0); /* assert PHY rst */
+    imx_iomux_v3_setup_multiple_pads(enet_pads, ARRAY_SIZE(enet_pads));
 
-	gpio_direction_output(IMX_GPIO_NR(6, 24), 1);
-	gpio_direction_output(IMX_GPIO_NR(6, 25), 1);
-	gpio_direction_output(IMX_GPIO_NR(6, 27), 1);
-	gpio_direction_output(IMX_GPIO_NR(6, 28), 1);
-	gpio_direction_output(IMX_GPIO_NR(6, 29), 1);
-
-	udelay(1000);
-
-	gpio_set_value(IMX_GPIO_NR(3, 29), 1); /* deassert PHY rst */
-
-	/* Need 100ms delay to exit from reset. */
-	udelay(1000 * 100);
-
-	gpio_free(IMX_GPIO_NR(6, 24));
-	gpio_free(IMX_GPIO_NR(6, 25));
-	gpio_free(IMX_GPIO_NR(6, 27));
-	gpio_free(IMX_GPIO_NR(6, 28));
-	gpio_free(IMX_GPIO_NR(6, 29));
-
-	imx_iomux_v3_setup_multiple_pads(enet_pads2, ARRAY_SIZE(enet_pads2));
+	/* Reset AR8031 PHY */
+	gpio_direction_output(ETH_PHY_RESET, 0);
+    /* the datasheet states a 10ms delay */
+	udelay(1000 * 10);
+	gpio_set_value(ETH_PHY_RESET, 1);
 }
 
 static struct fsl_esdhc_cfg usdhc_cfg[2] = {
