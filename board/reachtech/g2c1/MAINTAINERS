@@ -1,0 +1,7 @@
+G2C1 BOARD
+M:	Graeme Russ <gruss@tss-engineering.com>
+S:	Maintained
+F:	board/reachtech/g2c1/
+F:	include/configs/mx28evk.h
+F:	configs/g2c1_mmcconfig
+F:	configs/g2c1_nandconfig

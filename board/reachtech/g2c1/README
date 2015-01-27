@@ -1,0 +1,438 @@
+ReachTech G2C1
+==================
+
+Supported hardware: ReachTech G2C1
+
+Reference Documentation
+-----------------------
+doc/README.mxs
+
+Files of the G2C1 port
+--------------------------
+arch/arm/cpu/arm926ejs/mxs/	- The CPU support code for the Freescale i.MX28
+arch/arm/include/asm/arch-mxs/	- Header files for the Freescale i.MX28
+board/reachtech/g2c1/		- G2C1 board specific files
+include/configs/g2c1.h		- G2C1 configuration file
+configs/g2c1_mmc_config		- G2C1 MMC Target configuration file
+configs/g2c1_nand_config	- G2C1 NAND Target configuration file
+
+2) Compiling U-Boot for a MXS based board
+-------------------------------------------
+doc/README.mxs contains detailed information for compiling U-Boot for mx28
+based boards. The following are a minimal set of instructions for building a
+U-Boot image for the G2C1 board.
+
+Step 0) - Ensure the 'MXS No Battery' Patch is applied
+Refer below to 'No LiIon Battery' in the 'G2C1 Features' of this README
+
+Step 1) - Clean
+Clean the U-Boot build tree of all stale output files by running the following
+command:
+
+	$ make mrproper
+
+Step 2) - Configure
+Configure the U-Boot build system to build either an MMC or NAND image by
+running one of the following commands:
+
+	$ make g2c1_mmc_config
+
+or;
+
+	$ make g2c1_nand_config
+
+NOTE: The environment variables will be stored on the same target as the U-Boot
+image. i.e. running 'make g2c1_mmc_config' will generate a U-Boot image with
+the environment stored on the MMC card.
+
+Step 3) - Build U-Boot
+Compile U-Boot and prepare an MXS "BootStream" by running the following
+command:
+
+	$ make u-boot.sb
+
+Step 4) - Prepare Image
+Prepare the "BootStream" for writing to the SD card or NAND flash
+
+ - If preparing an SD card image, run the following command:
+
+	$ ./tools/mxsboot sd u-boot.sb u-boot.sd
+
+ - If preparing a NAND flash image, run the following command:
+
+	$ ./tools/mxsboot nand u-boot.sb u-boot.nand
+
+Step 5) - Install Image
+Write the processed "BootStream" to the SD card or NAND flash (Refer to
+doc/README.mxs for instructions)
+
+U-Boot Environment Storage
+--------------------------
+The U-Boot environment variables will be stored either on the SD/MMC card or
+in NAND flash depending on the configuration selected in step 2 of the build
+process. The U-Boot environment size is configured to 16Kib.
+
+SD/MMC:
+If the environment is stored on the SD/MMC card, the environment will be stored
+at the end of the partition reserved for U-Boot (see doc/README.mxs)
+
+NAND:
+If the environment is stored in NAND flash, the environment will be stored at
+an offset of 3MiB from the beginning of the NAND flash. 4 NAND Pages (512KiB)
+are reserved for each of the primary and redundant environment stores (the
+additional space allows for bad NAND blocks)
+
+Jumper configuration
+---------------------
+Pins 3 & 4 of JP2 determine if the board boots from an SD Card or the
+onboard NAND Flash:
+ - Jumper in  - Boot from NAND Flash
+ - Jumper out - Boot from SD Card
+
+G2C1 Features
+-------------
+ - No LiIon Battery
+   The G2C1 board does not contain a 4.2v Lithium Ion battery (refer to
+   Freescale Application Note AN4199). The U-Boot patch 'arm: mxs: Enable
+   booting of mx28 without battery' MUST be applied in order for the G2C1
+   board to boot.
+
+ - Run LED
+   GPIO Bank 3, Pin 27 controls the board's Run LED. This output is Active Low.
+   U-Boot turns on the Run LED after SPL has completed and U-Boot has been
+   loaded into memory
+
+ - NAND Write Protect
+   NAND can be write protected via hardware (by inserting a jumper across pins
+   1 and 2 of J2) or software (by setting GPIO Bank 0, Pin 28 to logic 0). NAND
+   is write protected if EITHER of these two mechanisms are active.
+
+   WARNING: U-Boot disables the software NAND write protect (in order to allow
+   U-Boot to write updated U-Boot images to the NAND)
+
+ - 8-bit GPIO with Interrupt
+   The G2C1 ulitises a PCA9534 '8-bit I 2 C-bus and SMBus low power I/O port
+   with interrupt' to provide 8 configurable digital GPIO pins. The interrupt
+   output of the PCA9534 is connected to GPIO Bank 0, Pin 18
+
+ - RTC
+   The G2C1 utilises a PCF8523 'Real-Time Clock (RTC) and calendar' connected
+   to the I2C bus (slave address 0b1101000). The interrupt output of the
+   PCF8523 is NOT connected to any MX28 input.
+
+   NOTE:  The G2C1 schematics document the I2C slave address of this device
+   being 0b0111110. However, the PCA9534 data sheet states that the slave
+   address is 0b0100xxx, with the 3 LSBs set via hardware (in the case of the
+   G2C1, the LSBs are set to 110). Therefore, the slave address might actually
+   be 0b0100110, not 0b0111110.
+
+ - LCD Panel
+   Power to the LCD panel can be turned off by setting GPIO Bank 3, Pin 30 to
+   logic 0.
+
+   The LCD backlight is enabled by setting GPIO Bank 3, Pin 2 to logic 1
+   Backlight brightness is controlled by PWM3
+
+   The LCD display is enabled by setting GPIO Bank 0, Pin 19 to logic 1
+
+ - Debug Port CTS
+   The CTS line of the RS-232 Debug port is controlled by GPIO Bank 2, Pin 5.
+   U-Boot sets the Debug Port CTS to logic 1 (enabled)
+
+ - Ethernet
+   The G2C1 board utilises a LAN8720A 'Small Footprint RMII 10/100 Ethernet
+   Transceiver with HP Auto-MDIX Support' PHY. The PHY can be reset by holding
+   GPIO Bank 3, Pin 20 at logic 0 for a minimum of 100us
+
+   The Interrupt output of the PHY is connected to GPIO Bank 2, Pin 6. This
+   input is active low
+
+ - USB (General)
+   The G2C1 utilises a USB2512B 'USB 2.0 Hi-Speed Hub Controller' to provide
+   two USB host ports. The USB2512B is connect to USB1 of the MX28, while USB0
+   is connected to the USB OTG port.
+
+ - USB OTG Power Enable
+   Power to the USB OTG connector is enabled by setting GPIO Bank 2, Pin 4 to
+   logic level 1. U-Boot disables power to the USB OTG connector
+
+ - USB Overcurrent (USB OTG Only)
+   Only the USB OTG port is monitored for overcurrent condition. In the event
+   of an overcurrent detected on the USB OTG port, the USB0_OVRCURRENT input of
+   the MX28 will be asserted (active low input)
+
+ - USB Reset (USB1 Only)
+   The USB2512B Hub Controller can be reset by by holding GPIO Bank 2, Pin 7 at
+   logic 0 for a minimum of 1us
+
+ - Onboard Audio
+   The G2C1 board includes an onboard speaker. Pitch and volume of the audio
+   output is controlled via PWM4 and PWM7
+
+   NOTE: Consult Rechtech regarding generating audio using PWM4 and PWM7
+
+What Isn't Implemented
+----------------------
+ - Control of 8-bit GPIO (No U-Boot driver for the PCA9534)
+ - External RTC (No U-Boot driver for the PCF8523)
+ - LCD Backlight control (see Note)
+ - Onboard Audio control (see Note)
+ - Change state of Software Write Protect of NAND (can probably be done via
+   the gpio command)
+
+NOTE: LCD Backlight and Onboard Audio control control require configuration of
+the MXS PWMs
+
+IOMUX Configuration
+-------------------
+Bank.	SoC
+Pin	Pin	Function	Comments
+--------------------------------------------------------------------------
+0.0	U8	GPMI_D0
+0.1	T8	GPMI_D1
+0.2	R8	GPMI_D2
+0.3	U7	GPMI_D3
+0.4	T7	GPMI_D4
+0.5	R7	GPMI_D5
+0.6	U6	GPMI_D6
+0.7	T6	GPMI_D7
+0.8	-	-		Reserved
+0.9	-	-		Reserved
+0.10	-	-		Reserved
+0.11	-	-		Reserved
+0.12	-	-		Reserved
+0.13	-	-		Reserved
+0.14	-	-		Reserved
+0.15	-	-		Reserved
+0.16	N7	GPMI_CE0N
+0.17	N9	GPMI_CE1N
+0.18	M7	GPIO_INTERUPT	GPIO, Input, 3V3, 4mA, External Pullup
+0.19	M9	DISP_ON		GPIO, Output, 3V3, 4mA, No Pullup
+0.20	N6	GPMI_READY0
+0.21	N8	GPMI_READY1
+0.22	M8	CAN0_TX
+0.23	L8	CAN0_RX
+0.24	R6	GPMI_RDN
+0.25	P8	GPMI_WRN
+0.26	P6	GPMI_ALE
+0.27	P7	GPMI_CLE
+0.28	L9	NAND_WP		GPIO, 3V3, 4mA, External Pullup, Active Low
+0.29	-	-		Reserved
+0.30	-	-		Reserved
+0.31	-	-		Reserved
+
+Bank.	SoC
+Pin	Pin	Function	Comments
+--------------------------------------------------------------------------
+1.0	K2	LCD_D0
+1.1	K3	LCD_D1
+1.2	L2	LCD_D2
+1.3	L3	LCD_D3
+1.4	M2	LCD_D4
+1.5	M3	LCD_D5
+1.6	N2	LCD_D6
+1.7	P1	LCD_D7
+1.8	P2	LCD_D8
+1.9	P3	LCD_D9
+1.10	R1	LCD_D10
+1.11	R2	LCD_D11
+1.12	T1	LCD_D12
+1.13	T2	LCD_D13
+1.14	U2	LCD_D14
+1.15	U3	LCD_D15
+1.16	T3	LCD_D16
+1.17	R3	LCD_D17
+1.18	U4	LCD_D18
+1.19	T4	LCD_D19
+1.20	R4	LCD_D20
+1.21	U5	LCD_D21
+1.22	T5	LCD_D22
+1.23	R5	LCD_D23
+1.24	P4	LCD_VSYNC
+1.25	K1	LCD_HSYNC
+1.26	M4	LCD_DOTCLK
+1.27	P5	LCD_ENABLE
+1.28	L1	LCD_VSYNC	Not Connected
+1.29	M1	LCD_HSYNC	Not Connected
+1.30	N1	LCD_DOTCLK	Not Connected
+1.31	N5	LCD_ENABLE	Not Connected
+ *
+Bank.	SoC
+Pin	Pin	Function	Comments
+--------------------------------------------------------------------------
+2.0	B6	SSP0_D0
+2.1	C6	SSP0_D1
+2.2	D6	SSP0_D2
+2.3	A5	SSP0_D3
+2.4	B5	USB_0_PWR_EN	GPIO, Output, 3V3, 4mA, External Pulldown
+2.5	C5	DUART_CTS	GPIO, Output, 3V3, 4mA, External Pullup
+2.6	D5	ENET_INT	GPIO, Input,  3V3, 4mA, External Pullup
+2.7	B4	USB_RESET_B	GPIO, Output, 3V3, 4mA, External Pullup
+2.8	A4	SSP0_CMD
+2.9	D10	SSP0_CARD_DTCT
+2.10	A6	SSP0_SCK
+2.11	-	-		Reserved
+2.12	B1	SSP1_SCK	Not Connected
+2.13	C1	SSP1_CMD	Not Connected
+2.14	D1	SSP1_DATA0	Not Connected
+2.15	E1	SSP1_DATA3	Not Connected
+2.16	A3	SSP2_SCK	SPI Clock - 3V3, 4mA, No Pullup
+2.17	C3	SSP2_MOSI	SPI MOSI - 3V3, 4mA, No Pullup
+2.18	B3	SSP2_MISO	SPI MISO - 3V3, 4mA, No Pullup
+2.19	C4	SSP2_SS0	SPI Slave Select 0 - 3V3, 4mA, No Pullup
+2.20	D3	SSP2_SS1	SPI Slave Select 1 - 3V3, 4mA, No Pullup
+2.21	D4	USB0_OVRCURRENT	USB Overcurrent
+2.22	-	-		Reserved
+2.23	-	-		Reserved
+2.24	A2	SSP3_SCK	Not Connected
+2.25	C2	SSP3_MOSI	Not Connected
+2.26	B2	SSP3_MISO	Not Connected
+2.27	D2	SSP3_SS0	Not Connected
+2.28	-	-		Reserved
+2.29	-	-		Reserved
+2.30	-	-		Reserved
+2.31	-	-		Reserved
+
+Bank.	SoC
+Pin	Pin	Function	Comments
+--------------------------------------------------------------------------
+3.0	G5	AUART0_RX	RS485
+3.1	H5	AUART0_TX	RS485
+3.2	J6	BACKLIGHT_EN	GPIO, Output, 3V3, 4mA, External Pulldown
+3.3	J7	AUART0_RTS	RS485
+3.4	L4	AUART1_RX
+3.5	K4	AUART1_TX
+3.6	K5	AUART1_CTS	Not Connected
+3.7	J5	AUART1_RTS	Not Connected
+3.8	F6	AUART2_RX	Not Connected
+3.9	F5	AUART2_TX	Not Connected
+3.10	H6	AUART2_CTS	Not Connected
+3.11	H7	AUART2_RTS	Not Connected
+3.12	M5	AUART3_RX	Not Connected
+3.13	L5	AUART3_TX	Not Connected
+3.14	L6	AUART3_CTS	Not Connected
+3.15	K6	AUART3_RTS	Not Connected
+3.16	K7	I2C1_SCL
+3.17	L7	I2C1_SDA
+3.18	K8	USB0_ID		USB OTG ID
+3.19	-	-		Reserved
+3.20	G7	ENET_FEC_RESET	GPIO, Output, 3V3, 4mA, External Pullup, Active Low
+3.21	G6	AUART4_RTS	RS485 hardware issue
+3.22	F7	AUART4_RX	RS485 hardware issue
+3.23	E7	AUART4_TX	RS485 hardware issue
+3.24	C7	DUART_RX
+3.25	D8	DUART_TX
+3.26	E8	PWM7		Onboard Audio (Frequency or Volume?)
+3.27	D7	RUN_LED		GPIO, Output, 3V3, Active Low
+3.28	E9	PWM_3		LCD Backlight Brightness
+3.29	E10	PWM_4		Onboard Audio (Frequency or Volume?)
+3.30	M6	LCD_PWR_EN	GPIO, Output, 3V3, 4mA, External Pullup
+3.31	-	-		Reserved
+
+Bank.	SoC
+Pin	Pin	Function	Comments
+--------------------------------------------------------------------------
+4.0	G4	ENET0_MDC	3V3, 4mA, Internal Pullup
+4.1	H4	ENET0_MDIO	3V3, 4mA, Internal Pullup
+4.2	E4	ENET0_RX_EN	3V3, 4mA, Internal Pullup
+4.3	H1	ENET0_RXD0	3V3, 4mA, Internal Pullup
+4.4	H2	ENET0_RXD1	3V3, 4mA, Internal Pullup
+4.5	E3	ENET0_TX_CLK	Not Connected
+4.6	F4	ENET0_TX_EN
+4.7	F1	ENET0_TXD0
+4.8	F2	ENET0_TXD1
+4.9	J1	ENET0_RX_D2	Not Connected
+4.10	J2	ENET0_RX_D3	Not Connected
+4.11	G1	ENET0_TX_D2	Not Connected
+4.12	G2	ENET0_TX_D2	Not Connected
+4.13	F3	ENET0_RX_CLK	Not Connected
+4.14	J4	ENET0_COL	Not Connected
+4.15	J3	ENET0_CRS	Not Connected
+4.16	E2	CLKCTRL_ENET
+4.17	-	-		Reserved
+4.18	-	-		Reserved
+4.19	-	-		Reserved
+4.20	E14	JTAG_RTCK	3V3, 4mA, External Pullup
+4.21	-	-		Reserved
+4.22	-	-		Reserved
+4.23	-	-		Reserved
+4.24	-	-		Reserved
+4.25	-	-		Reserved
+4.26	-	-		Reserved
+4.27	-	-		Reserved
+4.28	-	-		Reserved
+4.29	-	-		Reserved
+4.30	-	-		Reserved
+4.31	-	-		Reserved
+
+Bank.	SoC
+Pin	Pin	Function	Comments
+--------------------------------------------------------------------------
+5.0	N16	EMI_DATA0
+5.1	M13	EMI_DATA1
+5.2	P15	EMI_DATA2
+5.3	N14	EMI_DATA3
+5.4	P13	EMI_DATA4
+5.5	P17	EMI_DATA5
+5.6	L14	EMI_DATA6
+5.7	M17	EMI_DATA7
+5.8	G16	EMI_DATA8
+5.9	H15	EMI_DATA9
+5.10	G14	EMI_DATA10
+5.11	J14	EMI_DATA11
+5.12	H13	EMI_DATA12
+5.13	H17	EMI_DATA13
+5.14	F13	EMI_DATA14
+5.15	F17	EMI_DATA15
+5.16	R17	EMI_ODT0
+5.17	M15	EMI_DQM0
+5.18	T17	EMI_ODT1	Not Connected
+5.19	F15	EMI_DQM1
+5.20	L15	EMI_DDR_OPEN_FB
+5.21	L16/L17	EMI_CLK
+5.22	K16/K17	EMI_DQS0
+5.23	J16/J17	EMI_DQS1
+5.24	-	-		Reserved
+5.25	-	-		Reserved
+5.26	K14	EMI_DDR_OPEN
+5.27	-	-		Reserved
+5.28	-	-		Reserved
+5.29	-	-		Reserved
+5.30	-	-		Reserved
+5.31	-	-		Reserved
+
+Bank.	SoC
+Pin	Pin	Function	Comments
+--------------------------------------------------------------------------
+6.0	U15	EMI_ADDR0
+6.1	U12	EMI_ADDR1
+6.2	U14	EMI_ADDR2
+6.3	T11	EMI_ADDR3
+6.4	U10	EMI_ADDR4
+6.5	R11	EMI_ADDR5
+6.6	R9	EMI_ADDR6
+6.7	N11	EMI_ADDR7
+6.8	U9	EMI_ADDR8
+6.9	P10	EMI_ADDR9
+6.10	U13	EMI_ADDR10
+6.11	T10	EMI_ADDR11
+6.12	U11	EMI_ADDR12
+6.13	T9	EMI_ADDR13
+6.14	N10	EMI_ADDR14
+6.15	-	-		Reserved
+6.16	T16	EMI_BA0
+6.17	T12	EMI_BA1
+6.18	N12	EMI_BA2
+6.19	U16	EMI_CASN
+6.20	R16	EMI_RASN
+6.21	T15	EMI_WEN
+6.22	P12	EMI_CE0N
+6.23	P9	EMI_CE1N	Not Connected
+6.24	T13	EMI_CKE
+6.25	-	-		Reserved
+6.26	-	-		Reserved
+6.27	-	-		Reserved
+6.28	-	-		Reserved
+6.29	-	-		Reserved
+6.30	-	-		Reserved
+6.31	-	-		Reserved
