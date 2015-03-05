@@ -122,6 +122,8 @@
 
 #define CONFIG_DEFAULT_FDT_FILE		"imx6sdl-hawthorne.dtb"
 
+#define CONFIG_SYS_GENERIC_BOARD
+
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"image=zImage\0" \
 	"console=ttymxc0\0" \
