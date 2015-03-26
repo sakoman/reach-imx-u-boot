@@ -47,6 +47,11 @@ DECLARE_GLOBAL_DATA_PTR;
 #define USDHC2_CD_GPIO		IMX_GPIO_NR(1, 4)
 #define ETH_PHY_RESET		IMX_GPIO_NR(1, 25)
 
+#define DIP_PIN1			IMX_GPIO_NR(1, 20)
+#define DIP_PIN2			IMX_GPIO_NR(1, 17)
+#define DIP_PIN3			IMX_GPIO_NR(1, 19)
+#define DIP_PIN4			IMX_GPIO_NR(1, 21)
+
 int dram_init(void)
 {
 	gd->ram_size = (phys_size_t)CONFIG_DDR_MB * 1024 * 1024;
@@ -338,6 +343,19 @@ int overwrite_console(void)
 	return 1;
 }
 
+static char board_dipswitch(void)
+{
+	char val = 0;
+
+	/* read the pin and toggle, the reads are flipped , investigate */
+	val |= ((gpio_get_value(DIP_PIN1)) ^ (1 << 0)) << 0;
+	val |= ((gpio_get_value(DIP_PIN2)) ^ (1 << 0)) << 1;
+	val |= ((gpio_get_value(DIP_PIN3)) ^ (1 << 0)) << 2;
+	val |= ((gpio_get_value(DIP_PIN4)) ^ (1 << 0)) << 3;
+
+	return val;
+}
+
 #ifdef CONFIG_CMD_BMODE
 static const struct boot_mode board_boot_modes[] = {
 	/* 4 bit bus width */
@@ -373,3 +391,19 @@ int checkboard(void)
 
 	return 0;
 }
+
+static int do_dip(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+{
+	setenv_hex("dipswitch", board_dipswitch());
+
+	printf("dipswitch 0x%X \n",board_dipswitch());
+
+	return 0;
+}
+
+
+U_BOOT_CMD(
+	dip, 1, 1, do_dip,
+	"Reads DIP, sets 'dipswitch' environment variable",
+	"Returns 0 (true) on read"
+);
