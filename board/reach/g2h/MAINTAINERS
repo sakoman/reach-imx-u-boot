@@ -1,0 +1,6 @@
+G2H BOARD
+M:	Otavio Salvador <otavio@ossystems.com.br>
+S:	Maintained
+F:	board/reach/g2h/
+F:	include/configs/g2h.h
+F:	configs/g2h_defconfig

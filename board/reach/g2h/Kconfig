@@ -1,0 +1,12 @@
+if TARGET_G2H
+
+config SYS_BOARD
+	default "g2h"
+
+config SYS_VENDOR
+	default "reach"
+
+config SYS_CONFIG_NAME
+	default "g2h"
+
+endif
