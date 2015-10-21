@@ -15,11 +15,13 @@
 #include <asm/arch/sys_proto.h>
 #include <asm/gpio.h>
 #include <asm/imx-common/iomux-v3.h>
+#include <asm/imx-common/mxc_i2c.h>
 #include <asm/imx-common/boot_mode.h>
 #include <asm/io.h>
 #include <linux/sizes.h>
 #include <common.h>
 #include <fsl_esdhc.h>
+#include <i2c.h>
 #include <malloc.h>
 #include <mmc.h>
 #include <micrel.h>
@@ -42,6 +44,12 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define SPI_PAD_CTRL (PAD_CTL_HYS | PAD_CTL_SPEED_MED | \
 	PAD_CTL_DSE_40ohm | PAD_CTL_SRE_FAST)
+
+#define I2C_PAD_CTRL  (PAD_CTL_PUS_100K_UP |			\
+	PAD_CTL_SPEED_MED | PAD_CTL_DSE_40ohm | PAD_CTL_HYS |	\
+	PAD_CTL_ODE | PAD_CTL_SRE_FAST)
+
+#define I2C_PAD MUX_PAD_CTRL(I2C_PAD_CTRL)
 
 #define USDHC3_CD_GPIO		IMX_GPIO_NR(1, 2)
 #define USDHC2_CD_GPIO		IMX_GPIO_NR(1, 4)
@@ -119,6 +127,19 @@ static iomux_v3_cfg_t const ecspi1_pads[] = {
 	MX6_PAD_EIM_D17__ECSPI1_MISO | MUX_PAD_CTRL(SPI_PAD_CTRL),
 	MX6_PAD_EIM_D18__ECSPI1_MOSI | MUX_PAD_CTRL(SPI_PAD_CTRL),
 	MX6_PAD_EIM_D16__ECSPI1_SCLK | MUX_PAD_CTRL(SPI_PAD_CTRL),
+};
+
+static struct i2c_pads_info i2c_pad_info1 = {
+	.scl = {
+		.i2c_mode = MX6_PAD_CSI0_DAT9__I2C1_SCL | I2C_PAD,
+		.gpio_mode = MX6_PAD_CSI0_DAT9__GPIO5_IO27 | I2C_PAD,
+		.gp = IMX_GPIO_NR(5, 27)
+	},
+	.sda = {
+		.i2c_mode = MX6_PAD_CSI0_DAT8__I2C1_SDA | I2C_PAD,
+		.gpio_mode = MX6_PAD_CSI0_DAT8__GPIO5_IO26 | I2C_PAD,
+		.gp = IMX_GPIO_NR(5, 26)
+	},
 };
 
 static void setup_iomux_dipswitch(void)
@@ -338,6 +359,7 @@ int board_init(void)
 	gd->bd->bi_boot_params = PHYS_SDRAM + 0x100;
 
 	setup_spi();
+	setup_i2c(0, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info1);
 	setup_iomux_dipswitch();
 
 	return 0;
