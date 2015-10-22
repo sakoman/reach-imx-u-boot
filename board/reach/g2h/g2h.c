@@ -344,10 +344,35 @@ static const struct boot_mode board_boot_modes[] = {
 };
 #endif
 
+bool has_evervision(void)
+{
+	if (!i2c_probe(0x38))
+		return true;
+
+	return false;
+}
+
 int board_late_init(void)
 {
 #ifdef CONFIG_CMD_BMODE
 	add_board_boot_modes(board_boot_modes);
+#endif
+
+#ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
+	if (has_evervision())
+		setenv("touch_rev", "EVERVISION");
+	else
+		setenv("touch_rev", "RESISTIVE");
+#ifdef CONFIG_LCD_5_7
+	setenv("board_rev", "LCD_5_7");
+#endif
+#ifdef CONFIG_LCD_7
+	setenv("board_rev", "LCD_7");
+#endif
+#ifdef CONFIG_LCD_10_1
+	setenv("board_rev", "LCD_10_1");
+#endif
+
 #endif
 
 	return 0;

@@ -72,44 +72,49 @@
 #define CONFIG_SYS_I2C_MXC_I2C1
 #define CONFIG_SYS_I2C_SPEED		  100000
 
-#define CONFIG_DEFAULT_FDT_FILE		"imx6dl-g2h.dtb"
-
 #define CONFIG_SYS_GENERIC_BOARD
 
+#define CONFIG_CONSOLE_DEV		"ttymxc0"
+#define CONFIG_MMCROOT			"/dev/mmcblk2p2"
+
+#define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
+	"script=boot.scr\0" \
 	"image=zImage\0" \
-	"console=ttymxc0\0" \
-	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
-	"fdt_addr=0x18000000\0" \
+	"fdtfile=undefined\0" \
+	"fdt_addr_r=0x18000000\0" \
+	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
+	"console=" CONFIG_CONSOLE_DEV "\0" \
 	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
 	"mmcpart=1\0" \
-	"mmcroot=/dev/mmcblk2p2 rootwait rw\0" \
-	"mmcargs=setenv bootargs console=${console},${baudrate} " \
-		"root=${mmcroot} consoleblank=0 vt.global_cursor_default=0 \0" \
-	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
-	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
-	"mmcboot=echo Booting from mmc ...; " \
-		"run mmcargs; " \
-			"if run loadfdt; then " \
-				"bootz ${loadaddr} - ${fdt_addr}; " \
-			"else " \
-					"bootz; " \
-			"fi; \0" \
-	"netargs=setenv bootargs console=${console},${baudrate} " \
-		"root=/dev/nfs \0" \
-	"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
-		"netboot=echo Booting from net ...; " \
-		"run netargs; " \
+	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
+	"update_sd_firmware=" \
 		"if test ${ip_dyn} = yes; then " \
 			"setenv get_cmd dhcp; " \
 		"else " \
 			"setenv get_cmd tftp; " \
 		"fi; " \
-		"${get_cmd} ${image}; " \
+		"if mmc dev ${mmcdev}; then "	\
+			"if ${get_cmd} ${update_sd_firmware_filename}; then " \
+				"setexpr fw_sz ${filesize} / 0x200; " \
+				"setexpr fw_sz ${fw_sz} + 1; "	\
+				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
+			"fi; "	\
+		"fi\0" \
+	"mmcargs=setenv bootargs console=${console},${baudrate} " \
+		"root=${mmcroot}\0" \
+	"loadbootscript=" \
+		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
+	"bootscript=echo Running bootscript from mmc ...; " \
+		"source\0" \
+	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr_r} ${fdtfile}\0" \
+	"mmcboot=echo Booting from mmc ...; " \
+		"run mmcargs; " \
 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
-			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
-				"bootz ${loadaddr} - ${fdt_addr}; " \
+			"if run loadfdt; then " \
+				"bootz ${loadaddr} - ${fdt_addr_r}; " \
 			"else " \
 				"if test ${boot_fdt} = try; then " \
 					"bootz; " \
@@ -119,10 +124,60 @@
 			"fi; " \
 		"else " \
 			"bootz; " \
-		"fi;\0"
+		"fi;\0" \
+	"netargs=setenv bootargs console=${console},${baudrate} " \
+		"root=/dev/nfs " \
+		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
+	"netboot=echo Booting from net ...; " \
+		"run netargs; " \
+		"if test ${ip_dyn} = yes; then " \
+			"setenv get_cmd dhcp; " \
+		"else " \
+			"setenv get_cmd tftp; " \
+		"fi; " \
+		"${get_cmd} ${image}; " \
+		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+			"if ${get_cmd} ${fdt_addr_r} ${fdtfile}; then " \
+				"bootz ${loadaddr} - ${fdt_addr_r}; " \
+			"else " \
+				"if test ${boot_fdt} = try; then " \
+					"bootz; " \
+				"else " \
+					"echo WARN: Cannot load the DT; " \
+				"fi; " \
+			"fi; " \
+		"else " \
+			"bootz; " \
+		"fi;\0" \
+	"findfdt="\
+		"if test $touch_rev = EVERVISION && test $board_rev = LCD_5_7 ; then " \
+			"setenv fdtfile imx6dl-g2h-14.dtb; fi; " \
+		"if test $touch_rev = EVERVISION && test $board_rev = LCD_7 ; then " \
+			"setenv fdtfile imx6dl-g2h-3.dtb; fi; " \
+		"if test $touch_rev = EVERVISION && test $board_rev = LCD_10_1 ; then " \
+			"setenv fdtfile imx6dl-g2h-11.dtb; fi; " \
+		"if test $touch_rev = RESISTIVE && test $board_rev = LCD_5_7 ; then " \
+			"setenv fdtfile imx6dl-g2h-13.dtb; fi; " \
+		"if test $touch_rev = RESISTIVE && test $board_rev = LCD_7 ; then " \
+			"setenv fdtfile imx6dl-g2h-4.dtb; fi; " \
+		"if test $touch_rev = RESISTIVE && test $board_rev = LCD_10_1 ; then " \
+			"setenv fdtfile imx6dl-g2h-12.dtb; fi; " \
+		"if test $fdtfile = undefined; then " \
+			"echo WARNING: Could not determine dtb to use; fi; \0" \
 
 #define CONFIG_BOOTCOMMAND \
-	   "mmc dev ${mmcdev};  run loadimage; run mmcboot;"
+	"run findfdt; " \
+	"mmc dev ${mmcdev};" \
+	"if mmc rescan; then " \
+		"if run loadbootscript; then " \
+		"run bootscript; " \
+		"else " \
+			"if run loadimage; then " \
+				"run mmcboot; " \
+			"else run netboot; " \
+			"fi; " \
+		"fi; " \
+	"else run netboot; fi"
 
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
 
