@@ -79,6 +79,13 @@
 #define VIDEO_ARGS_SCRIPT ""
 #endif
 
+#define CONFIG_PREBOOT \
+	"if hdmidet; then " \
+		"setenv video_interfaces hdmi lvds; " \
+	"else " \
+		"setenv video_interfaces lvds hdmi; " \
+	"fi;"
+
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"script=boot.scr\0" \
 	"image=zImage\0" \
@@ -117,7 +124,6 @@
 	"video_args_lcd=setenv video_args $video_args " \
 		"video=mxcfb${fb}:dev=lcd,CLAA-WVGA,if=RGB666\0" \
 	"fb=0\0" \
-	"video_interfaces=hdmi lvds lcd\0" \
 	"video_args_script=" \
 		"for v in ${video_interfaces}; do " \
 			"run video_args_${v}; " \
@@ -250,6 +256,7 @@
 #define CONFIG_VIDEO_BMP_LOGO
 #define CONFIG_IPUV3_CLK 260000000
 #define CONFIG_IMX_HDMI
+#define CONFIG_CMD_HDMIDETECT
 #define CONFIG_IMX_VIDEO_SKIP
 
 #ifndef CONFIG_SPL
