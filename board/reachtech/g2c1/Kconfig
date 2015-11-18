@@ -1,0 +1,15 @@
+if TARGET_G2C1
+
+config SYS_BOARD
+	default "g2c1"
+
+config SYS_VENDOR
+	default "reachtech"
+
+config SYS_SOC
+	default "mxs"
+
+config SYS_CONFIG_NAME
+	default "g2c1"
+
+endif

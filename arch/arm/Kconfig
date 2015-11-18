@@ -153,6 +153,18 @@ config TARGET_XFI3
 	select CPU_ARM926EJS
 	select SUPPORT_SPL
 
+config TARGET_G2C1
+	bool "Support ReachTech G2C1"
+	select CPU_ARM926EJS
+	select SUPPORT_SPL
+	help
+	  This is the Reachtech G2C1 development board. It contains a
+	  Freescale MX28 SoC, 128MB DDR2 SDRAM, 128MB SLC NAND, 1x Ethernet
+	  port, 2x USB Host ports, 1x USB OTG port, 1x RS-232 Debug port,
+	  1x RS-232 User port, 2x RS485 ports, Onboard audio, LCD Touch
+	  screen interface, SD Card slot, I2C and SPI (with 2x slave select
+	  lines) interfaces, CAN interface, and 8 GPIO (I2C slave interface)
+
 config TARGET_M28EVK
 	bool "Support m28evk"
 	select CPU_ARM926EJS
@@ -768,6 +780,7 @@ source "board/olimex/mx23_olinuxino/Kconfig"
 source "board/phytec/pcm051/Kconfig"
 source "board/phytec/pcm052/Kconfig"
 source "board/ppcag/bg0900/Kconfig"
+source "board/reachtech/g2c1/Kconfig"
 source "board/samsung/smdk2410/Kconfig"
 source "board/sandisk/sansa_fuze_plus/Kconfig"
 source "board/schulercontrol/sc_sps_1/Kconfig"
