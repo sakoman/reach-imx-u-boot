@@ -106,6 +106,7 @@
 /* FEC Ethernet on SoC */
 #ifdef CONFIG_CMD_NET
 #define CONFIG_FEC_MXC
+#define CONFIG_MX28_FEC_MAC_IN_OCOTP
 #define CONFIG_PHYLIB
 #define CONFIG_PHY_SMSC
 #endif
