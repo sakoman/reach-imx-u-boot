@@ -15,10 +15,8 @@
 #define CONFIG_MX28			/* i.MX28 SoC */
 #define CONFIG_SYS_MXS_VDD5V_ONLY	/* No Battery */
 
-/* TODO: Remove all references to MACH_TYPE
-#define MACH_TYPE_G2C1	3613
-#define CONFIG_MACH_TYPE	MACH_TYPE_G2C1
-*/
+#define MACH_MX28_CANBY		4006
+#define CONFIG_MACH_TYPE	MACH_MX28_CANBY
 
 #define CONFIG_FIT
 
