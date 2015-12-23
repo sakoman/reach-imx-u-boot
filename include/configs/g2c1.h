@@ -233,7 +233,8 @@
 		"ubi create filesystem; " \
 		"ubi write ${loadaddr} filesystem ${filesize}\0" \
 	"nandargs=setenv bootargs console=${console_mainline},${baudrate} " \
-		"rootfstype=ubifs ubi.mtd=6 root=ubi0_0 ${mtdparts}\0" \
+		"rootfstype=ubifs ubi.mtd=6 root=ubi0_0 ${mtdparts} "\
+		"usbcore.autosuspend=-1\0" \
 	"nandboot="		/* Boot from NAND */ \
 		"mtdparts default; " \
 		"run nandargs; " \
@@ -268,7 +269,7 @@
 	"mmcpart=2\0" \
 	"mmcroot=/dev/mmcblk0p3 rw rootwait\0" \
 	"mmcargs=setenv bootargs console=${console_mainline},${baudrate} " \
-		"root=${mmcroot}\0" \
+		"root=${mmcroot} usbcore.autosuspend=-1\0" \
 	"loadbootscript="  \
 		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
 	"bootscript=echo Running bootscript from mmc ...; "	\
@@ -291,7 +292,7 @@
 			"bootz; " \
 		"fi;\0" \
 	"netargs=setenv bootargs console=${console_mainline},${baudrate} " \
-		"root=/dev/nfs " \
+		"root=/dev/nfs usbcore.autosuspend=-1 " \
 		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
 	"netboot=echo Booting from net ...; " \
 		"run netargs; "	\
