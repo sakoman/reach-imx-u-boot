@@ -71,6 +71,8 @@ int board_early_init_f(void)
 	/* Configure the 8-bit GPIO Interrupt Input */
 	gpio_direction_input(MX28_PAD_GPMI_CE2N__GPIO_0_18);
 
+	/* Configure the maximum beeper volume */
+	gpio_direction_output(MX28_PAD_PWM4__GPIO_3_29, 1);
 
 	return 0;
 }

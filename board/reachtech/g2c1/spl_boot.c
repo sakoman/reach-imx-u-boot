@@ -228,6 +228,9 @@ const iomux_cfg_t iomux_setup[] = {
 	MX28_PAD_EMI_WEN__EMI_WEN		| MUX_CONFIG_EMI,
 	MX28_PAD_EMI_CE0N__EMI_CE0N		| MUX_CONFIG_EMI,
 	MX28_PAD_EMI_CKE__EMI_CKE		| MUX_CONFIG_EMI,
+
+	/* PWM4 volume */
+	MX28_PAD_PWM4__GPIO_3_29		| MUX_CONFIG_GPIO,
 };
 
 void board_init_ll(const uint32_t arg, const uint32_t *resptr)
