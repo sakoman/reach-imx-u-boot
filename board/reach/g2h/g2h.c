@@ -54,6 +54,7 @@ DECLARE_GLOBAL_DATA_PTR;
 #define USDHC3_CD_GPIO		IMX_GPIO_NR(1, 2)
 #define USDHC2_CD_GPIO		IMX_GPIO_NR(1, 4)
 #define ETH_PHY_RESET		IMX_GPIO_NR(1, 25)
+#define BUZZER_VOLUME		IMX_GPIO_NR(1, 19)
 
 #define DIP_PIN1		IMX_GPIO_NR(1, 20)
 #define DIP_PIN2		IMX_GPIO_NR(1, 17)
@@ -162,6 +163,16 @@ static void setup_iomux_enet(void)
 	/* the datasheet states a 10ms delay */
 	udelay(1000 * 10);
 	gpio_set_value(ETH_PHY_RESET, 1);
+}
+
+static iomux_v3_cfg_t const pwm1_pads[] = {
+	/* Buzzer Volume */
+	MX6_PAD_SD1_DAT2__GPIO1_IO19	| MUX_PAD_CTRL(NO_PAD_CTRL),
+};
+
+static void setup_iomux_pwm(void)
+{
+	imx_iomux_v3_setup_multiple_pads(pwm1_pads, ARRAY_SIZE(pwm1_pads));
 }
 
 static struct fsl_esdhc_cfg usdhc_cfg[2] = {
@@ -386,6 +397,10 @@ int board_init(void)
 	setup_spi();
 	setup_i2c(0, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info1);
 	setup_iomux_dipswitch();
+	setup_iomux_pwm();
+
+	/* Set buzzer volume to the maximum */
+	gpio_set_value(BUZZER_VOLUME, 1);
 
 	return 0;
 }
