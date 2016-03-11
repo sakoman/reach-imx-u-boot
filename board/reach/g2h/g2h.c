@@ -17,6 +17,7 @@
 #include <asm/imx-common/iomux-v3.h>
 #include <asm/imx-common/mxc_i2c.h>
 #include <asm/imx-common/boot_mode.h>
+#include <asm/imx-common/video.h>
 #include <asm/io.h>
 #include <linux/sizes.h>
 #include <common.h>
@@ -28,6 +29,9 @@
 #include <miiphy.h>
 #include <netdev.h>
 #include <linux/fb.h>
+
+/* Special MXCFB sync flags are here. */
+#include "../drivers/video/mxcfb.h"
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -60,6 +64,9 @@ DECLARE_GLOBAL_DATA_PTR;
 #define DIP_PIN2		IMX_GPIO_NR(1, 17)
 #define DIP_PIN3		IMX_GPIO_NR(1, 19)
 #define DIP_PIN4		IMX_GPIO_NR(1, 21)
+
+#define LCD_PAR_ENABLE		IMX_GPIO_NR(2, 11)
+#define BACKLIGHT_PAR_ENABLE	IMX_GPIO_NR(2, 8)
 
 int dram_init(void)
 {
@@ -310,10 +317,82 @@ free_bus:
 	return ret;
 }
 
+#if defined(CONFIG_VIDEO_IPUV3)
+static iomux_v3_cfg_t const rgb_pads[] = {
+	MX6_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK,
+	MX6_PAD_DI0_PIN15__IPU1_DI0_PIN15,
+	MX6_PAD_DI0_PIN2__IPU1_DI0_PIN02,
+	MX6_PAD_DI0_PIN3__IPU1_DI0_PIN03,
+	MX6_PAD_DISP0_DAT0__IPU1_DISP0_DATA00,
+	MX6_PAD_DISP0_DAT1__IPU1_DISP0_DATA01,
+	MX6_PAD_DISP0_DAT2__IPU1_DISP0_DATA02,
+	MX6_PAD_DISP0_DAT3__IPU1_DISP0_DATA03,
+	MX6_PAD_DISP0_DAT4__IPU1_DISP0_DATA04,
+	MX6_PAD_DISP0_DAT5__IPU1_DISP0_DATA05,
+	MX6_PAD_DISP0_DAT6__IPU1_DISP0_DATA06,
+	MX6_PAD_DISP0_DAT7__IPU1_DISP0_DATA07,
+	MX6_PAD_DISP0_DAT8__IPU1_DISP0_DATA08,
+	MX6_PAD_DISP0_DAT9__IPU1_DISP0_DATA09,
+	MX6_PAD_DISP0_DAT10__IPU1_DISP0_DATA10,
+	MX6_PAD_DISP0_DAT11__IPU1_DISP0_DATA11,
+	MX6_PAD_DISP0_DAT12__IPU1_DISP0_DATA12,
+	MX6_PAD_DISP0_DAT13__IPU1_DISP0_DATA13,
+	MX6_PAD_DISP0_DAT14__IPU1_DISP0_DATA14,
+	MX6_PAD_DISP0_DAT15__IPU1_DISP0_DATA15,
+	MX6_PAD_DISP0_DAT16__IPU1_DISP0_DATA16,
+	MX6_PAD_DISP0_DAT17__IPU1_DISP0_DATA17,
+};
+
+static void enable_rgb(struct display_info_t const *dev)
+{
+	imx_iomux_v3_setup_multiple_pads(rgb_pads, ARRAY_SIZE(rgb_pads));
+	gpio_direction_output(LCD_PAR_ENABLE, 1);
+	gpio_direction_output(BACKLIGHT_PAR_ENABLE, 1);
+}
+
+struct display_info_t const displays[] = {{
+	.bus	= 0,
+	.addr	= 0,
+	.pixfmt	= IPU_PIX_FMT_RGB666,
+	.detect	= NULL,
+	.enable	= enable_rgb,
+	.mode	= {
+		.name           = "WVGA",
+		.refresh        = 60,
+		.xres           = 800,
+		.yres           = 480,
+		.pixclock       = 35714,
+		.left_margin    = 100,
+		.right_margin   = 100,
+		.upper_margin   = 56,
+		.lower_margin   = 15,
+		.hsync_len      = 5,
+		.vsync_len      = 10,
+		.sync           = FB_SYNC_CLK_LAT_FALL,
+		.vmode          = FB_VMODE_NONINTERLACED
+} } };
+size_t display_count = ARRAY_SIZE(displays);
+
+static void setup_display(void)
+{
+	struct mxc_ccm_reg *mxc_ccm = (struct mxc_ccm_reg *)CCM_BASE_ADDR;
+	int reg;
+
+	enable_ipu_clock();
+	/* Turn on LDB0,IPU,IPU DI0 clocks */
+	reg = __raw_readl(&mxc_ccm->CCGR3);
+	reg |=  MXC_CCM_CCGR3_LDB_DI0_MASK;
+	writel(reg, &mxc_ccm->CCGR3);
+}
+#endif
+
 int board_early_init_f(void)
 {
 	setup_iomux_uart();
 
+#if defined(CONFIG_VIDEO_IPUV3)
+	setup_display();
+#endif
 	return 0;
 }
 
