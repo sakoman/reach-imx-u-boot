@@ -443,6 +443,15 @@ bool has_evervision(void)
 	return false;
 }
 
+bool has_tsc2046(void)
+{
+#ifdef CONFIG_TOUCH_TSC2046
+		return true;
+#else
+		return false;
+#endif
+}
+
 int board_late_init(void)
 {
 #ifdef CONFIG_CMD_BMODE
@@ -452,6 +461,8 @@ int board_late_init(void)
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 	if (has_evervision())
 		setenv("touch_rev", "EVERVISION");
+	else if (has_tsc2046())
+		setenv("touch_rev", "TSC2046");
 	else
 		setenv("touch_rev", "RESISTIVE");
 #ifdef CONFIG_LCD_5_7

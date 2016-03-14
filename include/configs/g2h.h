@@ -167,6 +167,8 @@
 			"bootz; " \
 		"fi;\0" \
 	"findfdt="\
+		"if test $touch_rev = TSC2046 && test $board_rev = LCD_5_7 ; then " \
+			"setenv fdtfile imx6dl-g2h-1.dtb; fi; " \
 		"if test $touch_rev = EVERVISION && test $board_rev = LCD_5_7 ; then " \
 			"setenv fdtfile imx6dl-g2h-14.dtb; fi; " \
 		"if test $touch_rev = EVERVISION && test $board_rev = LCD_7 ; then " \
