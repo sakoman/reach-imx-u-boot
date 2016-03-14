@@ -184,6 +184,7 @@
 
 #define CONFIG_BOOTCOMMAND \
 	"run findfdt; " \
+	"setenv panel ${board_rev}; "\
 	"mmc dev ${mmcdev};" \
 	"if mmc rescan; then " \
 		"if run loadbootscript; then " \
