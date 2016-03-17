@@ -166,6 +166,14 @@
 		"else " \
 			"bootz; " \
 		"fi;\0" \
+    "nandargs=setenv bootargs console=${console},${baudrate} " \
+        "ubi.mtd=0,2048 root=ubi0:rootfs rootfstype=ubifs \0" \
+    "nandboot=echo Booting from nand ...; " \
+        "run nandargs; " \
+        "sf probe; " \
+        "sf read ${fdt_addr_r} 0x000E0000 0x20000; " \
+        "sf read ${loadaddr} 0x100000 0xf00000; " \
+        "bootz ${loadaddr} - ${fdt_addr_r}; \0" \
 	"findfdt="\
 		"if test $touch_rev = TSC2046 && test $board_rev = LCD_5_7 ; then " \
 			"setenv fdtfile imx6dl-g2h-1.dtb; fi; " \
@@ -184,6 +192,12 @@
 		"if test $fdtfile = undefined; then " \
 			"echo WARNING: Could not determine dtb to use; fi; \0" \
 
+#ifdef CONFIG_BOOT_FROM_SPI
+#define CONFIG_BOOTCOMMAND \
+	"run findfdt; " \
+	"setenv panel ${board_rev}; "\
+	"run nandboot; "
+#else
 #define CONFIG_BOOTCOMMAND \
 	"run findfdt; " \
 	"setenv panel ${board_rev}; "\
@@ -198,7 +212,7 @@
 			"fi; " \
 		"fi; " \
 	"else run netboot; fi"
-
+#endif
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
 
 #define CONFIG_CMDLINE_EDITING
