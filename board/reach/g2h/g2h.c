@@ -358,6 +358,14 @@ static int detect_7_panel(struct display_info_t const *dev)
 		return 0;
 }
 
+static int detect_5_7_panel(struct display_info_t const *dev)
+{
+	if (IS_ENABLED(CONFIG_LCD_5_7))
+		return 1;
+	else
+		return 0;
+}
+
 struct display_info_t const displays[] = {{
 	.bus	= 0,
 	.addr	= 0,
@@ -376,6 +384,26 @@ struct display_info_t const displays[] = {{
 		.lower_margin   = 15,
 		.hsync_len      = 5,
 		.vsync_len      = 10,
+		.sync           = FB_SYNC_CLK_LAT_FALL,
+		.vmode          = FB_VMODE_NONINTERLACED
+} }, {
+	.bus	= 0,
+	.addr	= 0,
+	.pixfmt	= IPU_PIX_FMT_RGB666,
+	.detect	= detect_5_7_panel,
+	.enable	= enable_rgb,
+	.mode	= {
+		.name           = "LCD_5_7",
+		.refresh        = 60,
+		.xres           = 640,
+		.yres           = 480,
+		.pixclock       = KHZ2PICOS(25175),
+		.left_margin    = 48,
+		.right_margin   = 16,
+		.upper_margin   = 31,
+		.lower_margin   = 11,
+		.hsync_len      = 96,
+		.vsync_len      = 2,
 		.sync           = FB_SYNC_CLK_LAT_FALL,
 		.vmode          = FB_VMODE_NONINTERLACED
 } } };
