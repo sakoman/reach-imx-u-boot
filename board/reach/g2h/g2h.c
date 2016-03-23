@@ -350,11 +350,19 @@ static void enable_rgb(struct display_info_t const *dev)
 	gpio_direction_output(BACKLIGHT_PAR_ENABLE, 1);
 }
 
+static int detect_7_panel(struct display_info_t const *dev)
+{
+	if (IS_ENABLED(CONFIG_LCD_7))
+		return 1;
+	else
+		return 0;
+}
+
 struct display_info_t const displays[] = {{
 	.bus	= 0,
 	.addr	= 0,
 	.pixfmt	= IPU_PIX_FMT_RGB666,
-	.detect	= NULL,
+	.detect	= detect_7_panel,
 	.enable	= enable_rgb,
 	.mode	= {
 		.name           = "LCD_7",
