@@ -366,6 +366,20 @@ static int detect_5_7_panel(struct display_info_t const *dev)
 		return 0;
 }
 
+static int detect_10_1_panel(struct display_info_t const *dev)
+{
+	if (IS_ENABLED(CONFIG_LCD_10_1))
+		return 1;
+	else
+		return 0;
+}
+
+static void enable_lvds(struct display_info_t const *dev)
+{
+	gpio_direction_output(LCD_PAR_ENABLE, 1);
+	gpio_direction_output(BACKLIGHT_PAR_ENABLE, 1);
+}
+
 struct display_info_t const displays[] = {{
 	.bus	= 0,
 	.addr	= 0,
@@ -406,12 +420,33 @@ struct display_info_t const displays[] = {{
 		.vsync_len      = 2,
 		.sync           = FB_SYNC_CLK_LAT_FALL,
 		.vmode          = FB_VMODE_NONINTERLACED
+} }, {
+	.bus	= 0,
+	.addr	= 0,
+	.pixfmt	= IPU_PIX_FMT_RGB666,
+	.detect	= detect_10_1_panel,
+	.enable	= enable_lvds,
+	.mode	= {
+		.name           = "LCD_10_1",
+		.refresh        = 60,
+		.xres           = 1280,
+		.yres           = 800,
+		.pixclock       = KHZ2PICOS(65000),
+		.left_margin    = 220,
+		.right_margin   = 40,
+		.upper_margin   = 21,
+		.lower_margin   = 7,
+		.hsync_len      = 60,
+		.vsync_len      = 10,
+		.sync           = FB_SYNC_EXT,
+		.vmode          = FB_VMODE_NONINTERLACED
 } } };
 size_t display_count = ARRAY_SIZE(displays);
 
 static void setup_display(void)
 {
 	struct mxc_ccm_reg *mxc_ccm = (struct mxc_ccm_reg *)CCM_BASE_ADDR;
+	struct iomuxc *iomux = (struct iomuxc *)IOMUXC_BASE_ADDR;
 	int reg;
 
 	enable_ipu_clock();
@@ -419,6 +454,35 @@ static void setup_display(void)
 	reg = __raw_readl(&mxc_ccm->CCGR3);
 	reg |=  MXC_CCM_CCGR3_LDB_DI0_MASK;
 	writel(reg, &mxc_ccm->CCGR3);
+
+	/* set LDB0, LDB1 clk select to 011/011 */
+	reg = readl(&mxc_ccm->cs2cdr);
+	reg &= ~(MXC_CCM_CS2CDR_LDB_DI0_CLK_SEL_MASK);
+	reg |= (3 << MXC_CCM_CS2CDR_LDB_DI0_CLK_SEL_OFFSET);
+	writel(reg, &mxc_ccm->cs2cdr);
+
+	reg = readl(&mxc_ccm->cscmr2);
+	reg |= MXC_CCM_CSCMR2_LDB_DI0_IPU_DIV;
+	writel(reg, &mxc_ccm->cscmr2);
+
+	reg = readl(&mxc_ccm->chsccdr);
+	reg |= (CHSCCDR_CLK_SEL_LDB_DI0
+		<< MXC_CCM_CHSCCDR_IPU1_DI0_CLK_SEL_OFFSET);
+	writel(reg, &mxc_ccm->chsccdr);
+
+	reg = IOMUXC_GPR2_BGREF_RRMODE_EXTERNAL_RES
+	     | IOMUXC_GPR2_DI0_VS_POLARITY_ACTIVE_LOW
+	     | IOMUXC_GPR2_BIT_MAPPING_CH0_SPWG
+	     | IOMUXC_GPR2_DATA_WIDTH_CH0_24BIT
+	     | IOMUXC_GPR2_LVDS_CH1_MODE_DISABLED
+	     | IOMUXC_GPR2_LVDS_CH0_MODE_ENABLED_DI0;
+	writel(reg, &iomux->gpr[2]);
+
+	reg = readl(&iomux->gpr[3]);
+	reg = (reg & ~IOMUXC_GPR3_LVDS0_MUX_CTL_MASK)
+	       | (IOMUXC_GPR3_MUX_SRC_IPU1_DI0
+		  << IOMUXC_GPR3_LVDS0_MUX_CTL_OFFSET);
+	writel(reg, &iomux->gpr[3]);
 }
 #endif
 
