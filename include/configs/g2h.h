@@ -189,23 +189,23 @@
         "sf read ${fdt_addr_r} 0x000E0000 0x20000; " \
         "sf read ${loadaddr} 0x100000 0xf00000; " \
         "bootz ${loadaddr} - ${fdt_addr_r}; \0" \
-	"findfdt="\
-		"if test $touch_rev = TSC2046 && test $board_rev = LCD_5_7 ; then " \
-			"setenv fdtfile imx6dl-g2h-1.dtb; fi; " \
-		"if test $touch_rev = EVERVISION && test $board_rev = LCD_5_7 ; then " \
-			"setenv fdtfile imx6dl-g2h-14.dtb; fi; " \
-		"if test $touch_rev = EVERVISION && test $board_rev = LCD_7 ; then " \
-			"setenv fdtfile imx6dl-g2h-3.dtb; fi; " \
-		"if test $touch_rev = EVERVISION && test $board_rev = LCD_10_1 ; then " \
-			"setenv fdtfile imx6dl-g2h-11.dtb; fi; " \
-		"if test $touch_rev = RESISTIVE && test $board_rev = LCD_5_7 ; then " \
-			"setenv fdtfile imx6dl-g2h-13.dtb; fi; " \
-		"if test $touch_rev = RESISTIVE && test $board_rev = LCD_7 ; then " \
-			"setenv fdtfile imx6dl-g2h-4.dtb; fi; " \
-		"if test $touch_rev = RESISTIVE && test $board_rev = LCD_10_1 ; then " \
-			"setenv fdtfile imx6dl-g2h-12.dtb; fi; " \
-		"if test $fdtfile = undefined; then " \
-			"echo WARNING: Could not determine dtb to use; fi; \0" \
+    "findfdt="\
+        "if test $touch_rev = TSC2046 && test $board_rev = LCD_5_7 ; then " \
+            "setenv fdtfile imx6dl-g2h-1.dtb; fi; " \
+        "if test $touch_rev = EVERVISION && test $board_rev = LCD_5_7 ; then " \
+            "setenv fdtfile imx6dl-g2h-14.dtb; fi; " \
+        "if test $touch_rev = EVERVISION && test $board_rev = LCD_7 ; then " \
+            "setenv fdtfile imx6dl-g2h-3.dtb; fi; " \
+        "if test $touch_rev = EVERVISION && test $board_rev = LCD_10_1 ; then " \
+            "setenv fdtfile imx6dl-g2h-11.dtb; fi; " \
+        "if test $touch_rev = RESISTIVE && test $board_rev = LCD_5_7 ; then " \
+            "setenv fdtfile imx6dl-g2h-13.dtb; fi; " \
+        "if test $touch_rev = RESISTIVE && test $board_rev = LCD_7 ; then " \
+            "setenv fdtfile imx6dl-g2h-4.dtb; fi; " \
+        "if test $touch_rev = RESISTIVE && test $board_rev = LCD_10_1 ; then " \
+            "setenv fdtfile imx6dl-g2h-12.dtb; fi; " \
+        "if test $fdtfile = undefined; then " \
+            "echo WARNING: Could not determine dtb to use; fi; \0" \
 
 #ifdef CONFIG_BOOT_FROM_SPI
 #define CONFIG_BOOTCOMMAND \
