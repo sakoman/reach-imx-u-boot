@@ -191,19 +191,20 @@
     "findfdt="\
         "if test -z \"$fdtfile\" ; then " \
             "if test $touch_rev = TSC2046 && test $board_rev = LCD_5_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-1.dtb; saveenv; fi; " \
+                "setenv fdtfile imx6dl-g2h-1.dtb; fi; " \
             "if test $touch_rev = EVERVISION && test $board_rev = LCD_5_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-14.dtb; saveenv; fi; " \
+                "setenv fdtfile imx6dl-g2h-14.dtb; fi; " \
             "if test $touch_rev = EVERVISION && test $board_rev = LCD_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-3.dtb; saveenv; fi; " \
+                "setenv fdtfile imx6dl-g2h-3.dtb; fi; " \
             "if test $touch_rev = EVERVISION && test $board_rev = LCD_10_1 ; then " \
-                "setenv fdtfile imx6dl-g2h-11.dtb; saveenv; fi; " \
+                "setenv fdtfile imx6dl-g2h-11.dtb; fi; " \
             "if test $touch_rev = RESISTIVE && test $board_rev = LCD_5_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-13.dtb; saveenv; fi; " \
+                "setenv fdtfile imx6dl-g2h-13.dtb; fi; " \
             "if test $touch_rev = RESISTIVE && test $board_rev = LCD_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-4.dtb; saveenv; fi; " \
+                "setenv fdtfile imx6dl-g2h-4.dtb; fi; " \
             "if test $touch_rev = RESISTIVE && test $board_rev = LCD_10_1 ; then " \
-                "setenv fdtfile imx6dl-g2h-12.dtb; saveenv; fi; " \
+                "setenv fdtfile imx6dl-g2h-12.dtb; fi; " \
+	     "saveenv; "\
         "fi; " \
         "if test -z \"$fdtfile\"; then " \
             "echo WARNING: Could not determine dtb to use; fi; \0" \
