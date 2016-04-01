@@ -116,6 +116,7 @@
 	"fdt_addr_r=0x18000000\0" \
 	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
+	"splashpos=m,m\0" \
 	"console=" CONFIG_CONSOLE_DEV "\0" \
 	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
 	"mmcpart=1\0" \
