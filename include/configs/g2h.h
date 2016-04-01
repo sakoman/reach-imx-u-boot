@@ -181,7 +181,7 @@
 			"bootz; " \
 		"fi;\0" \
     "nandargs=setenv bootargs console=${console},${baudrate} " \
-        "ubi.mtd=0,2048 root=ubi0:rootfs rootfstype=ubifs \0" \
+        "ubi.mtd=2,2048 root=ubi0:rootfs rootfstype=ubifs \0" \
     "nandboot=echo Booting from nand ...; " \
         "run nandargs; " \
         "nand read ${fdt_addr_r} 0x0000000 0x0080000; " \
