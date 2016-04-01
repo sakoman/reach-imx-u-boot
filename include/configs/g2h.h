@@ -184,9 +184,8 @@
         "ubi.mtd=0,2048 root=ubi0:rootfs rootfstype=ubifs \0" \
     "nandboot=echo Booting from nand ...; " \
         "run nandargs; " \
-        "sf probe; " \
-        "sf read ${fdt_addr_r} 0x000E0000 0x20000; " \
-        "sf read ${loadaddr} 0x100000 0xf00000; " \
+        "nand read ${fdt_addr_r} 0x0000000 0x0080000; " \
+        "nand read ${loadaddr} 0x0080000 0x0A00000; " \
         "bootz ${loadaddr} - ${fdt_addr_r}; \0" \
     "findfdt="\
         "if test -z \"$fdtfile\" ; then " \
