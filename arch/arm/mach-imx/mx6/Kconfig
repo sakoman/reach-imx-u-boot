@@ -189,6 +189,11 @@ config TARGET_GE_BX50V3
 	select BOARD_LATE_INIT
 	select MX6Q
 
+config TARGET_G2H
+	bool "g2h"
+	select DM
+	select DM_THERMAL
+
 config TARGET_GW_VENTANA
 	bool "gw_ventana"
 	select MX6QDL
@@ -557,6 +562,7 @@ source "board/samtec/vining_2000/Kconfig"
 source "board/liebherr/display5/Kconfig"
 source "board/liebherr/mccmon6/Kconfig"
 source "board/logicpd/imx6/Kconfig"
+source "board/reach/g2h/Kconfig"
 source "board/seco/Kconfig"
 source "board/sks-kinkel/sksimx6/Kconfig"
 source "board/solidrun/mx6cuboxi/Kconfig"
