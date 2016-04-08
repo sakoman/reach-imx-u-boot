@@ -1,0 +1,65 @@
+U-Boot for Reach Technology G2H MX6 boards
+
+This file contains information for the port of U-Boot to the Reach
+G2H boards.
+
+1. Booting from the SD card
+---------------------------
+
+1a) Building U-Boot for SD card boot
+
+- Build U-Boot for Reach G2H board (using G2H 7" display board as
+an example):
+
+$ make mrproper
+$ make g2h_7_defconfig
+$ make
+
+This will generate the u-boot.imx binary.
+
+1b) Booting from the SD card
+
+- Flash the u-boot.imx binary into the SD card:
+
+sudo dd if=u-boot.imx of=/dev/mmcblk0 bs=1k seek=1; sync
+
+- Insert the SD card into the J12 slot.
+
+- Let pins 2-3 of jumper JP1 in the open position
+
+- Power up the board and U-boot messages should come up in the console
+
+2. Booting from the SPI NOR flash
+---------------------------------
+
+2a) Building U-Boot for SPI NOR flash boot
+
+- Build U-Boot for Reach G2H board (using G2H 7" display board as
+an example):
+
+$ make mrproper
+$ make g2h_7_spi_nor_defconfig
+$ make
+
+This will generate the u-boot.imx binary.
+
+2b) Flashing U-Boot in the SPI NOR
+
+Copy u-boot.imx to the exported TFTP directory of the host
+PC (/tftpboot , for example).
+
+=> sf probe
+
+=> setenv serverip <server_ip_address>
+
+=> setenv ipaddr <board_ip_address>
+
+=> tftp 0x12000000 u-boot.imx
+
+=> sf erase 0x0 0x80000
+
+=> sf write 0x12000000 0x400 0x80000
+
+- Close pins 2-3 of jumper JP1
+
+- Power up the board and U-boot messages should come up in the console
