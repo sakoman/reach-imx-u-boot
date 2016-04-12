@@ -263,6 +263,8 @@
 	"console_mainline=ttyAMA0\0" \
 	"fdt_file=imx28-g2c1.dtb\0" \
 	"fdt_addr=0x41000000\0" \
+	"videomode=video=ctfb:x:480,y:272,depth:24,mode:0,pclk:111111,"	\
+		"le:2,ri:41,up:2,lo:11,hs:2,vs:2,sync:0,vmode:0\0" \
 	"boot_fdt=yes\0" \
 	"ip_dyn=yes\0" \
 	"mmcdev=0\0" \
