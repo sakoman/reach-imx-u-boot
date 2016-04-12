@@ -269,6 +269,7 @@
 		"le:2,ri:41,up:2,lo:11,hs:2,vs:2,sync:0,vmode:0\0" \
 	"boot_fdt=yes\0" \
 	"ip_dyn=yes\0" \
+	"splashpos=m,m\0" \
 	"mmcdev=0\0" \
 	"mmcpart=2\0" \
 	"mmcroot=/dev/mmcblk0p3 rw rootwait\0" \
