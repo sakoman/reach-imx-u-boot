@@ -450,13 +450,13 @@ static void setup_display(void)
 	struct mxc_ccm_reg *mxc_ccm = (struct mxc_ccm_reg *)CCM_BASE_ADDR;
 	struct iomuxc *iomux = (struct iomuxc *)IOMUXC_BASE_ADDR;
 	int reg;
-	
+
 	imx_iomux_v3_setup_multiple_pads(display_enable_pads,
 					 ARRAY_SIZE(display_enable_pads));
 
-	gpio_direction_output(BACKLIGHT_PWM, 1);
-	gpio_direction_output(DISP0_VDDEN, 1);
-	gpio_direction_output(LVDS0_EN, 1);
+	gpio_direction_output(BACKLIGHT_PWM, 0);
+	gpio_direction_output(DISP0_VDDEN, 0);
+	gpio_direction_output(LVDS0_EN, 0);
 
 	enable_ipu_clock();
 	/* Turn on LDB0,IPU,IPU DI0 clocks */
@@ -643,6 +643,10 @@ int board_late_init(void)
 #endif
 
 #endif
+	gpio_set_value(BACKLIGHT_PWM, 1);
+	gpio_set_value(DISP0_VDDEN, 1);
+	mdelay(150);
+	gpio_set_value(LVDS0_EN, 1);
 
 	return 0;
 }
