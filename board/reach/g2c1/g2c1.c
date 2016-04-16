@@ -48,17 +48,6 @@ int board_early_init_f(void)
 	/* Turn off software write protect of NAND */
 	gpio_direction_output(MX28_PAD_GPMI_RESETN__GPIO_0_28, 1);
 
-	/* Power on LCD */
-	gpio_direction_output(MX28_PAD_LCD_RESET__GPIO_3_30, 1);
-
-	/* Enable the LCD display */
-	gpio_direction_output(MX28_PAD_GPMI_CE3N__GPIO_0_19, 1);
-
-	/* Turn on the LCD backlight */
-	gpio_direction_output(MX28_PAD_AUART0_CTS__GPIO_3_2, 1);
-
-	/* TODO: Set the LCD backlight to maximum brightness */
-
 	/* Disbale power to the USB OTG Port */
 	gpio_direction_output(MX28_PAD_SSP0_DATA4__GPIO_2_4, 0);
 
@@ -86,6 +75,36 @@ int board_init(void)
 {
 	/* Adress of boot parameters */
 	gd->bd->bi_boot_params = PHYS_SDRAM_1 + 0x100;
+
+	return 0;
+}
+
+#define MUX_CONFIG_GPIO	(MXS_PAD_3V3 | MXS_PAD_4MA  | MXS_PAD_NOPULL)
+const iomux_cfg_t iomux_display[] = {
+	/* LCD Panel Power Enable */
+	MX28_PAD_LCD_RESET__GPIO_3_30		| MUX_CONFIG_GPIO,
+
+	/* LCD Backlight Enable */
+	MX28_PAD_AUART0_CTS__GPIO_3_2		| MUX_CONFIG_GPIO,
+
+	/* Display On */
+	MX28_PAD_GPMI_CE3N__GPIO_0_19		| MUX_CONFIG_GPIO,
+};
+
+int board_late_init(void)
+{
+	mxs_iomux_setup_multiple_pads(iomux_display, ARRAY_SIZE(iomux_display));
+
+	/* Power on LCD */
+	gpio_direction_output(MX28_PAD_LCD_RESET__GPIO_3_30, 1);
+
+	mdelay(200);
+
+	/* Enable the LCD display */
+	gpio_direction_output(MX28_PAD_GPMI_CE3N__GPIO_0_19, 1);
+
+	/* Turn on the LCD backlight */
+	gpio_direction_output(MX28_PAD_AUART0_CTS__GPIO_3_2, 1);
 
 	return 0;
 }

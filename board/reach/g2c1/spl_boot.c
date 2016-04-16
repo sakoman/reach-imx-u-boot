@@ -65,17 +65,8 @@ const iomux_cfg_t iomux_setup[] = {
 	MX28_PAD_LCD_RS__LCD_DOTCLK		| MUX_CONFIG_LCD,
 	MX28_PAD_LCD_CS__LCD_ENABLE		| MUX_CONFIG_LCD,
 
-	/* LCD Panel Power Enable */
-	MX28_PAD_LCD_RESET__GPIO_3_30		| (MXS_PAD_3V3 | MXS_PAD_4MA),
-
-	/* LCD Backlight Enable */
-	MX28_PAD_AUART0_CTS__GPIO_3_2		| (MXS_PAD_3V3 | MXS_PAD_4MA),
-
 	/* LCD Brightness */
 	MX28_PAD_PWM3__PWM_3			| MUX_CONFIG_PWM,
-
-	/* Display On */
-	MX28_PAD_GPMI_CE3N__GPIO_0_19		| MUX_CONFIG_GPIO,
 
 	/* DUART with GPIO CTS Control - RS232 DEBUG Port */
 	MX28_PAD_I2C0_SDA__DUART_TX		| MUX_CONFIG_UART,

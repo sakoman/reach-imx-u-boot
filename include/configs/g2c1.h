@@ -20,6 +20,8 @@
 
 #define CONFIG_FIT
 
+#define CONFIG_BOARD_LATE_INIT
+
 #define CONFIG_TIMESTAMP		/* Print image info with timestamp */
 
 /* U-Boot Commands */
