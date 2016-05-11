@@ -132,7 +132,7 @@
 				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
 			"fi; "	\
 		"fi\0" \
-	"mmcargs=setenv bootargs console=${console},${baudrate} " \
+	"mmcargs=setenv bootargs console=${console},${baudrate} quiet " \
 		"root=${mmcroot}\0" \
 	"loadbootscript=" \
 		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
@@ -155,7 +155,7 @@
 		"else " \
 			"bootz; " \
 		"fi;\0" \
-	"netargs=setenv bootargs console=${console},${baudrate} " \
+	"netargs=setenv bootargs console=${console},${baudrate} quiet " \
 		"root=/dev/nfs " \
 		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
 	"netboot=echo Booting from net ...; " \
@@ -179,7 +179,7 @@
 		"else " \
 			"bootz; " \
 		"fi;\0" \
-    "nandargs=setenv bootargs console=${console},${baudrate} " \
+    "nandargs=setenv bootargs console=${console},${baudrate} quiet " \
         "ubi.mtd=2,2048 root=ubi0:rootfs rootfstype=ubifs \0" \
     "nandboot=echo Booting from nand ...; " \
         "run nandargs; " \
