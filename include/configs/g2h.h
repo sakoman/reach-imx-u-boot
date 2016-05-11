@@ -107,6 +107,11 @@
 #define CONFIG_APBH_DMA_BURST
 #define CONFIG_APBH_DMA_BURST8
 
+/* Set Boot Delay to Zero*/
+#define CONFIG_BOOTDELAY    0
+/* Stops autoboot process even when bootdelay is set to 0 */
+#define CONFIG_ZERO_BOOTDELAY_CHECK
+
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"script=boot.scr\0" \
