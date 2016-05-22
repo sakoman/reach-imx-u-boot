@@ -613,6 +613,7 @@ struct fb_videomode {
 };
 
 int board_video_skip(void);
+void shutdown_lcd(void);
 
 #endif /* __KERNEL__ */
 
