@@ -277,6 +277,9 @@ void arch_preboot_os(void)
 	disable_sata_clock();
 #endif
 #endif
+#if defined(CONFIG_VIDEO_SHUTDOWN_LCD)
+	shutdown_lcd();
+#endif
 #if defined(CONFIG_VIDEO_IPUV3)
 	/* disable video before launching O/S */
 	ipuv3_fb_shutdown();
