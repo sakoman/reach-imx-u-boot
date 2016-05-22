@@ -454,10 +454,6 @@ static void setup_display(void)
 	imx_iomux_v3_setup_multiple_pads(display_enable_pads,
 					 ARRAY_SIZE(display_enable_pads));
 
-	gpio_direction_output(BACKLIGHT_PWM, 0);
-	gpio_direction_output(DISP0_VDDEN, 0);
-	gpio_direction_output(LVDS0_EN, 0);
-
 	enable_ipu_clock();
 	/* Turn on LDB0,IPU,IPU DI0 clocks */
 	reg = __raw_readl(&mxc_ccm->CCGR3);
@@ -552,6 +548,10 @@ static void setup_gpmi_nand(void)
 
 int board_early_init_f(void)
 {
+	gpio_direction_output(BACKLIGHT_PWM, 0);
+	gpio_direction_output(DISP0_VDDEN, 0);
+	gpio_direction_output(LVDS0_EN, 0);
+
 	setup_iomux_uart();
 
 #if defined(CONFIG_VIDEO_IPUV3)
@@ -645,7 +645,11 @@ int board_late_init(void)
 #endif
 	gpio_set_value(BACKLIGHT_PWM, 1);
 	gpio_set_value(DISP0_VDDEN, 1);
+#ifdef CONFIG_LCD_5_7
+	mdelay(400);
+#else
 	mdelay(150);
+#endif
 	gpio_set_value(LVDS0_EN, 1);
 
 	return 0;
