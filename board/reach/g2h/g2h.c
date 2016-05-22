@@ -674,6 +674,13 @@ int checkboard(void)
 	return 0;
 }
 
+void shutdown_lcd(void)
+{
+	gpio_set_value(LVDS0_EN, 0);
+	gpio_set_value(BACKLIGHT_PWM, 0);
+	gpio_set_value(DISP0_VDDEN, 0);
+}
+
 static int do_dip(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	setenv_hex("dipswitch", board_dipswitch());

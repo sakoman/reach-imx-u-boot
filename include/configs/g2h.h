@@ -76,6 +76,7 @@
 #define CONFIG_MMCROOT			"/dev/mmcblk2p2"
 
 /* Framebuffer */
+#define CONFIG_VIDEO_SHUTDOWN_LCD
 #define CONFIG_VIDEO
 #define CONFIG_VIDEO_IPUV3
 #define CONFIG_CFB_CONSOLE
