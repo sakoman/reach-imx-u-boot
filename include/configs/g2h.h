@@ -9,6 +9,12 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+
+/* Set Boot Delay to Zero*/
+#define CONFIG_BOOTDELAY    0
+/* Stops autoboot process even when bootdelay is set to 0 */
+#define CONFIG_ZERO_BOOTDELAY_CHECK
+
 #include "mx6_common.h"
 #include <asm/arch/imx-regs.h>
 #include <asm/imx-common/gpio.h>
@@ -106,11 +112,6 @@
 #define CONFIG_APBH_DMA
 #define CONFIG_APBH_DMA_BURST
 #define CONFIG_APBH_DMA_BURST8
-
-/* Set Boot Delay to Zero*/
-#define CONFIG_BOOTDELAY    0
-/* Stops autoboot process even when bootdelay is set to 0 */
-#define CONFIG_ZERO_BOOTDELAY_CHECK
 
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
