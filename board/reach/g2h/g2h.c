@@ -377,6 +377,14 @@ static int detect_10_1_panel(struct display_info_t const *dev)
 		return 0;
 }
 
+static int detect_10_4_panel(struct display_info_t const *dev)
+{
+	if (IS_ENABLED(CONFIG_LCD_10_4))
+		return 1;
+	else
+		return 0;
+}
+
 static void enable_rgb(struct display_info_t const *dev)
 {	
 	imx_iomux_v3_setup_multiple_pads(rgb_pads, ARRAY_SIZE(rgb_pads));
@@ -442,7 +450,28 @@ struct display_info_t const displays[] = {{
 		.vsync_len      = 10,
 		.sync           = FB_SYNC_EXT,
 		.vmode          = FB_VMODE_NONINTERLACED
+} }, {
+	.bus	= 0,
+	.addr	= 0,
+	.pixfmt	= IPU_PIX_FMT_RGB666,
+	.detect	= detect_10_4_panel,
+	.enable	= NULL,
+	.mode	= {
+		.name           = "LCD_10_4",
+		.refresh        = 60,
+		.xres           = 1024,
+		.yres           = 768,
+		.pixclock       = KHZ2PICOS(60000),
+		.left_margin    = 220,
+		.right_margin   = 40,
+		.upper_margin   = 21,
+		.lower_margin   = 7,
+		.hsync_len      = 60,
+		.vsync_len      = 10,
+		.sync           = FB_SYNC_EXT,
+		.vmode          = FB_VMODE_NONINTERLACED
 } } };
+
 size_t display_count = ARRAY_SIZE(displays);
 
 static void setup_display(void)
@@ -640,6 +669,9 @@ int board_late_init(void)
 #endif
 #ifdef CONFIG_LCD_10_1
 	setenv("board_rev", "LCD_10_1");
+#endif
+#ifdef CONFIG_LCD_10_4
+	setenv("board_rev", "LCD_10_4");
 #endif
 
 #endif
