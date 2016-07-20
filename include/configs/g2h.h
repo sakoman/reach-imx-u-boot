@@ -203,6 +203,8 @@
                 "setenv fdtfile imx6dl-g2h-4.dtb; fi; " \
             "if test $touch_rev = RESISTIVE && test $board_rev = LCD_10_1 ; then " \
                 "setenv fdtfile imx6dl-g2h-12.dtb; fi; " \
+            "if test $touch_rev = RESISTIVE && test $board_rev = LCD_10_4 ; then " \
+                "setenv fdtfile imx6dl-g2h-15.dtb; fi; " \
 	     "saveenv; "\
         "fi; " \
         "if test -z \"$fdtfile\"; then " \
