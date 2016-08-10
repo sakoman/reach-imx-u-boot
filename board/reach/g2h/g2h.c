@@ -639,13 +639,30 @@ bool has_evervision(void)
 	return false;
 }
 
-bool has_tsc2046(void)
+bool has_base_io(void)
 {
-#ifdef CONFIG_TOUCH_TSC2046
-		return true;
-#else
-		return false;
-#endif
+    char val = 0;
+
+    /* 
+     * on the base IO board only PIN3 and PIN4 are available; we are 
+     * using PIN4 to determine Base IO from Full IO
+     */
+    val |= ((gpio_get_value(DIP_PIN4)) ^ (1 << 0)) << 3;
+
+    if (val == 0x8) {
+		setenv("board_dip", simple_itoa(val));
+
+        return true;
+    }
+
+    /* if PIN4 is low this is a full stuff so read the other pins */
+    val |= ((gpio_get_value(DIP_PIN1)) ^ (1 << 0)) << 0;
+    val |= ((gpio_get_value(DIP_PIN2)) ^ (1 << 0)) << 1;
+    val |= ((gpio_get_value(DIP_PIN3)) ^ (1 << 0)) << 2;
+
+	setenv("board_dip", simple_itoa(val));
+
+    return false;
 }
 
 int board_late_init(void)
@@ -655,12 +672,17 @@ int board_late_init(void)
 #endif
 
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
-	if (has_evervision())
+	if (has_evervision()) {
 		setenv("touch_rev", "EVERVISION");
-	else if (has_tsc2046())
-		setenv("touch_rev", "TSC2046");
-	else
+    } else {
 		setenv("touch_rev", "RESISTIVE");
+    }
+
+    if (has_base_io()) {
+		setenv("base_io", "true");
+    } else {
+		setenv("base_io", "false");
+    }
 #ifdef CONFIG_LCD_5_7
 	setenv("board_rev", "LCD_5_7");
 #endif
