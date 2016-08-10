@@ -108,6 +108,29 @@
 #define CONFIG_APBH_DMA_BURST
 #define CONFIG_APBH_DMA_BURST8
 
+/* panel and touch options */
+#define EVERVISION_5_7    "test $touch_rev = EVERVISION && test $board_rev = LCD_5_7"
+#define RESISTIVE_5_7     "test $touch_rev = RESISTIVE && test $board_rev = LCD_5_7"
+
+#define EVERVISION_7    "test $touch_rev = EVERVISION && test $board_rev = LCD_7"
+#define RESISTIVE_7     "test $touch_rev = RESISTIVE && test $board_rev = LCD_7"
+
+#define EVERVISION_10_1 "test $touch_rev = EVERVISION && test $board_rev = LCD_10_1"
+#define RESISTIVE_10_1  "test $touch_rev = RESISTIVE && test $board_rev = LCD_10_1"
+
+#define RESISTIVE_10_4  "test $touch_rev = RESISTIVE && test $board_rev = LCD_10_4"
+
+#define BASE_IO "test $base_io = true"
+
+#define DIP_0 "test $board_dip = 0"
+#define DIP_1 "test $board_dip = 1"
+#define DIP_2 "test $board_dip = 2"
+#define DIP_3 "test $board_dip = 3"
+#define DIP_4 "test $board_dip = 4"
+#define DIP_5 "test $board_dip = 5"
+#define DIP_6 "test $board_dip = 6"
+#define DIP_7 "test $board_dip = 7"
+
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"script=boot.scr\0" \
@@ -189,23 +212,36 @@
         "bootz ${loadaddr} - ${fdt_addr_r}; \0" \
     "findfdt="\
         "if test -z \"$fdtfile\" ; then " \
-            "if test $touch_rev = TSC2046 && test $board_rev = LCD_5_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-1.dtb; fi; " \
-            "if test $touch_rev = EVERVISION && test $board_rev = LCD_5_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-14.dtb; fi; " \
-            "if test $touch_rev = EVERVISION && test $board_rev = LCD_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-3.dtb; fi; " \
-            "if test $touch_rev = EVERVISION && test $board_rev = LCD_10_1 ; then " \
-                "setenv fdtfile imx6dl-g2h-11.dtb; fi; " \
-            "if test $touch_rev = RESISTIVE && test $board_rev = LCD_5_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-13.dtb; fi; " \
-            "if test $touch_rev = RESISTIVE && test $board_rev = LCD_7 ; then " \
-                "setenv fdtfile imx6dl-g2h-4.dtb; fi; " \
-            "if test $touch_rev = RESISTIVE && test $board_rev = LCD_10_1 ; then " \
-                "setenv fdtfile imx6dl-g2h-12.dtb; fi; " \
-            "if test $touch_rev = RESISTIVE && test $board_rev = LCD_10_4 ; then " \
-                "setenv fdtfile imx6dl-g2h-15.dtb; fi; " \
-	     "saveenv; "\
+            "if " BASE_IO "; then " \
+                "if " EVERVISION_5_7 " ; then " \
+                    "setenv fdtfile imx6dl-g2h-14.dtb; fi; " \
+                "if " RESISTIVE_5_7 "; then " \
+                    "setenv fdtfile imx6dl-g2h-13.dtb; fi; " \
+                "if " EVERVISION_7 " ; then " \
+                    "setenv fdtfile imx6dl-g2h-3.dtb; fi; " \
+                "if " RESISTIVE_7 "; then " \
+                    "setenv fdtfile imx6dl-g2h-4.dtb; fi; " \
+            " else " \
+                "if " EVERVISION_5_7 " && " DIP_0 " ; then " \
+                    "setenv fdtfile imx6dl-g2h-14f.dtb; fi; " \
+                "if " RESISTIVE_5_7 " && " DIP_0 "; then " \
+                    "setenv fdtfile imx6dl-g2h-13f.dtb; fi; " \
+                "if " EVERVISION_7 " && " DIP_1 " ; then " \
+                    "setenv fdtfile imx6dl-g2h-3f.dtb; fi; " \
+                "if " RESISTIVE_7 " && " DIP_1 "; then " \
+                    "setenv fdtfile imx6dl-g2h-4f.dtb; fi; " \
+                "if " EVERVISION_10_1 " && " DIP_2 "; then " \
+                    "setenv fdtfile imx6dl-g2h-11.dtb; fi; " \
+                "if " RESISTIVE_10_1 " && " DIP_2 "; then " \
+                    "setenv fdtfile imx6dl-g2h-12.dtb; fi; " \
+                "if " RESISTIVE_10_1 " && " DIP_4 "; then " \
+                    "setenv fdtfile imx6dl-g2h-21.dtb; fi; " \
+                "if " RESISTIVE_10_4 " && " DIP_5 "; then " \
+                    "setenv fdtfile imx6dl-g2h-15.dtb; fi; " \
+                "if " RESISTIVE_10_4 " && " DIP_6 "; then " \
+                    "setenv fdtfile imx6dl-g2h-22.dtb; fi; " \
+            "fi;" \
+	        "saveenv; " \
         "fi; " \
         "if test -z \"$fdtfile\"; then " \
             "echo WARNING: Could not determine dtb to use; fi; \0" \
