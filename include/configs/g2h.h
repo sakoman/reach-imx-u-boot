@@ -79,7 +79,7 @@
 #define CONFIG_SYS_I2C_SPEED		  100000
 
 #define CONFIG_CONSOLE_DEV		"ttymxc0"
-#define CONFIG_MMCROOT			"/dev/mmcblk2p2"
+#define CONFIG_MMCROOT			"/dev/mmcblk0p2"
 
 /* Framebuffer */
 #define CONFIG_VIDEO_SHUTDOWN_LCD
@@ -113,6 +113,33 @@
 #define CONFIG_APBH_DMA
 #define CONFIG_APBH_DMA_BURST
 #define CONFIG_APBH_DMA_BURST8
+
+/* kernel device tree options */
+#if defined(CONFIG_SOLO_3)
+#define CONFIG_DT "imx6dl-g2h-3.dtb"
+#elif defined(CONFIG_SOLO_3f)
+#define CONFIG_DT "imx6dl-g2h-3f.dtb"
+#elif defined(CONFIG_SOLO_4)
+#define CONFIG_DT "imx6dl-g2h-4.dtb"
+#elif defined(CONFIG_SOLO_4f)
+#define CONFIG_DT "imx6dl-g2h-4f.dtb"
+#elif defined(CONFIG_SOLO_13)
+#define CONFIG_DT "imx6dl-g2h-13.dtb"
+#elif defined(CONFIG_SOLO_13f)
+#define CONFIG_DT "imx6dl-g2h-13f.dtb"
+#elif defined(CONFIG_SOLO_14)
+#define CONFIG_DT "imx6dl-g2h-14.dtb"
+#elif defined(CONFIG_SOLO_14f)
+#define CONFIG_DT "imx6dl-g2h-14f.dtb"
+#elif defined(CONFIG_SOLO_11f)
+#define CONFIG_DT "imx6dl-g2h-11f.dtb"
+#elif defined(CONFIG_SOLO_12f)
+#define CONFIG_DT "imx6dl-g2h-12f.dtb"
+#elif defined(CONFIG_SOLO_6)
+#define CONFIG_DT "imx6dl-g2h-6.dtb"
+#else
+#define CONFIG_DT ""
+#endif
 
 /* panel and touch options */
 #define EVERVISION_5_7    "test $touch_rev = EVERVISION && test $board_rev = LCD_5_7"
@@ -149,6 +176,7 @@
 	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
 	"mmcpart=1\0" \
 	"mmcroot=" CONFIG_MMCROOT " rootwait rw rootfstype=ext4\0" \
+    "fdtfile=" CONFIG_DT "\0" \
 	"update_sd_firmware=" \
 		"if test ${ip_dyn} = yes; then " \
 			"setenv get_cmd dhcp; " \
@@ -257,7 +285,6 @@
 	"run nandboot; "
 #else
 #define CONFIG_BOOTCOMMAND \
-	"run findfdt; " \
 	"setenv panel ${board_rev}; "\
 	"mmc dev ${mmcdev};" \
 	"if mmc rescan; then " \
