@@ -701,6 +701,8 @@ int board_late_init(void)
 	gpio_set_value(DISP0_VDDEN, 1);
 #ifdef CONFIG_LCD_5_7
 	mdelay(400);
+#elif CONFIG_LCD_10_1
+	mdelay(250);
 #else
 	mdelay(150);
 #endif
