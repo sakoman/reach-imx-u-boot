@@ -166,7 +166,6 @@
 
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"script=boot.scr\0" \
 	"image=zImage\0" \
 	"fdt_addr_r=0x18000000\0" \
 	"boot_fdt=try\0" \
@@ -191,11 +190,7 @@
 			"fi; "	\
 		"fi\0" \
 	"mmcargs=setenv bootargs console=${console},${baudrate} quiet " \
-		"root=${mmcroot}\0" \
-	"loadbootscript=" \
-		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
-	"bootscript=echo Running bootscript from mmc ...; " \
-		"source\0" \
+		"root=${mmcroot} consoleblank=0 vt.global_cursor_default=0\0" \
 	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
 	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr_r} ${fdtfile}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
@@ -244,41 +239,6 @@
         "nand read ${fdt_addr_r} 0x0000000 0x0080000; " \
         "nand read ${loadaddr} 0x0080000 0x0A00000; " \
         "bootz ${loadaddr} - ${fdt_addr_r}; \0" \
-    "findfdt="\
-        "if test -z \"$fdtfile\" ; then " \
-            "if " BASE_IO "; then " \
-                "if " EVERVISION_5_7 " ; then " \
-                    "setenv fdtfile imx6dl-g2h-14.dtb; fi; " \
-                "if " RESISTIVE_5_7 "; then " \
-                    "setenv fdtfile imx6dl-g2h-13.dtb; fi; " \
-                "if " EVERVISION_7 " ; then " \
-                    "setenv fdtfile imx6dl-g2h-3.dtb; fi; " \
-                "if " RESISTIVE_7 "; then " \
-                    "setenv fdtfile imx6dl-g2h-4.dtb; fi; " \
-            " else " \
-                "if " EVERVISION_5_7 " && " DIP_0 " ; then " \
-                    "setenv fdtfile imx6dl-g2h-14f.dtb; fi; " \
-                "if " RESISTIVE_5_7 " && " DIP_0 "; then " \
-                    "setenv fdtfile imx6dl-g2h-13f.dtb; fi; " \
-                "if " EVERVISION_7 " && " DIP_1 " ; then " \
-                    "setenv fdtfile imx6dl-g2h-3f.dtb; fi; " \
-                "if " RESISTIVE_7 " && " DIP_1 "; then " \
-                    "setenv fdtfile imx6dl-g2h-4f.dtb; fi; " \
-                "if " EVERVISION_10_1 " && " DIP_2 "; then " \
-                    "setenv fdtfile imx6dl-g2h-11.dtb; fi; " \
-                "if " RESISTIVE_10_1 " && " DIP_2 "; then " \
-                    "setenv fdtfile imx6dl-g2h-12.dtb; fi; " \
-                "if " RESISTIVE_10_1 " && " DIP_4 "; then " \
-                    "setenv fdtfile imx6dl-g2h-21.dtb; fi; " \
-                "if " RESISTIVE_10_4 " && " DIP_5 "; then " \
-                    "setenv fdtfile imx6dl-g2h-15.dtb; fi; " \
-                "if " RESISTIVE_10_4 " && " DIP_6 "; then " \
-                    "setenv fdtfile imx6dl-g2h-22.dtb; fi; " \
-            "fi;" \
-	        "saveenv; " \
-        "fi; " \
-        "if test -z \"$fdtfile\"; then " \
-            "echo WARNING: Could not determine dtb to use; fi; \0" \
 
 #ifdef CONFIG_BOOT_FROM_SPI
 #define CONFIG_BOOTCOMMAND \
@@ -287,16 +247,9 @@
 #define CONFIG_BOOTCOMMAND \
 	"setenv panel ${board_rev}; "\
 	"mmc dev ${mmcdev};" \
-	"if mmc rescan; then " \
-		"if run loadbootscript; then " \
-		"run bootscript; " \
-		"else " \
-			"if run loadimage; then " \
-				"run mmcboot; " \
-			"else run netboot; " \
-			"fi; " \
-		"fi; " \
-	"else run netboot; fi"
+	"mmc rescan; " \
+	"run loadimage; " \
+	"run mmcboot; "
 #endif
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
 
