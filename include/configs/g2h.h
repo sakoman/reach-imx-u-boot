@@ -242,6 +242,7 @@
 
 #ifdef CONFIG_BOOT_FROM_SPI
 #define CONFIG_BOOTCOMMAND \
+	"setenv panel ${board_rev}; "\
 	"run nandboot; "
 #else
 #define CONFIG_BOOTCOMMAND \
