@@ -233,7 +233,8 @@
 			"bootz; " \
 		"fi;\0" \
     "nandargs=setenv bootargs console=${console},${baudrate} quiet " \
-        "ubi.mtd=2,2048 root=ubi0:rootfs rootfstype=ubifs \0" \
+        "${nandroot} consoleblank=0 vt.global_cursor_default=0 \0" \
+    "nandroot=ubi.mtd=2,2048 root=ubi0:rootfs0 rootfstype=ubifs \0" \
     "nandboot=echo Booting from nand ...; " \
         "run nandargs; " \
         "nand read ${fdt_addr_r} 0x0000000 0x0080000; " \
@@ -278,7 +279,7 @@
 
 #if defined(CONFIG_BOOT_FROM_SPI)
 #define CONFIG_ENV_IS_IN_SPI_FLASH
-#define CONFIG_ENV_OFFSET		(768 * 1024)
+#define CONFIG_ENV_OFFSET		(512 * 1024)
 #define CONFIG_ENV_SECT_SIZE		(64 * 1024)
 #define CONFIG_ENV_SPI_BUS		CONFIG_SF_DEFAULT_BUS
 #define CONFIG_ENV_SPI_CS		CONFIG_SF_DEFAULT_CS
