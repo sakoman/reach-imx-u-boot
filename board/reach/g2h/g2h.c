@@ -433,7 +433,7 @@ struct display_info_t const displays[] = {{
 } }, {
 	.bus	= 0,
 	.addr	= 0,
-	.pixfmt	= IPU_PIX_FMT_RGB666,
+	.pixfmt	= IPU_PIX_FMT_RGB24,
 	.detect	= detect_10_1_panel,
 	.enable	= NULL,
 	.mode	= {
@@ -453,7 +453,7 @@ struct display_info_t const displays[] = {{
 } }, {
 	.bus	= 0,
 	.addr	= 0,
-	.pixfmt	= IPU_PIX_FMT_RGB666,
+	.pixfmt	= IPU_PIX_FMT_RGB24,
 	.detect	= detect_10_4_panel,
 	.enable	= NULL,
 	.mode	= {
@@ -702,7 +702,7 @@ int board_late_init(void)
 #ifdef CONFIG_LCD_5_7
 	mdelay(400);
 #elif CONFIG_LCD_10_1
-	mdelay(250);
+	mdelay(300);
 #else
 	mdelay(150);
 #endif
