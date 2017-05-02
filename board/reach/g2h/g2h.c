@@ -738,6 +738,7 @@ void shutdown_lcd(void)
 {
 	gpio_set_value(LVDS0_EN, 0);
 	gpio_set_value(BACKLIGHT_PWM, 0);
+	mdelay(150);
 	gpio_set_value(DISP0_VDDEN, 0);
 }
 
