@@ -1023,6 +1023,7 @@ int spi_flash_scan(struct spi_flash *flash)
 	/* Flash powers up read-only, so clear BP# bits */
 	if (idcode[0] == SPI_FLASH_CFI_MFR_ATMEL ||
 	    idcode[0] == SPI_FLASH_CFI_MFR_MACRONIX ||
+	    idcode[0] == SPI_FLASH_CFI_MFR_STMICRO ||
 	    idcode[0] == SPI_FLASH_CFI_MFR_SST)
 		write_sr(flash, 0);
 
