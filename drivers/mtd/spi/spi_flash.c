@@ -1158,6 +1158,7 @@ int spi_flash_scan(struct spi_flash *flash)
 	 */
 	if (JEDEC_MFR(info) == SPI_FLASH_CFI_MFR_ATMEL ||
 	   (JEDEC_MFR(info) == SPI_FLASH_CFI_MFR_SST) ||
+	   (JEDEC_MFR(info) == SPI_FLASH_CFI_MFR_STMICRO) ||
 	   (JEDEC_MFR(info) == SPI_FLASH_CFI_MFR_MACRONIX)) {
 		u8 sr = 0;
 
