@@ -234,7 +234,7 @@
         "bootz ${loadaddr} - ${fdt_addr}; \0" \
 	"swupdate=false \0" \
 	"rescue_addr=0x19000000 \0" \
-    "rescue_image=swupdate.ext3.gz \0" \
+    "rescue_image=rescue-image.ext3.gz \0" \
 	"load_sd_rescue_image=fatload mmc ${mmcdev}:${mmcpart} ${rescue_addr} ${rescue_image}\0" \
     "rescue_root=/dev/ram0 rw initrd=0x19000000,5M \0" \
     "rescue_args=setenv bootargs console=${console},${baudrate} rdinit=/sbin/init " \
