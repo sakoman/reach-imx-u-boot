@@ -73,7 +73,7 @@
 #define CONFIG_SYS_I2C_SPEED		  100000
 
 #define CONFIG_CONSOLE_DEV		"ttymxc0"
-#define CONFIG_MMCROOT			"/dev/mmcblk0p2"
+#define CONFIG_MMCROOT			"/dev/mmcblk2p1"
 
 /* Framebuffer */
 #define CONFIG_VIDEO_SHUTDOWN_LCD
@@ -109,54 +109,19 @@
 #define CONFIG_APBH_DMA_BURST8
 
 /* kernel device tree options */
-#if defined(CONFIG_SOLO_3)
-#define CONFIG_DT "imx6dl-g2h-3.dtb"
-#elif defined(CONFIG_SOLO_3f)
-#define CONFIG_DT "imx6dl-g2h-3f.dtb"
-#elif defined(CONFIG_SOLO_4)
-#define CONFIG_DT "imx6dl-g2h-4.dtb"
-#elif defined(CONFIG_SOLO_4f)
-#define CONFIG_DT "imx6dl-g2h-4f.dtb"
-#elif defined(CONFIG_SOLO_13)
-#define CONFIG_DT "imx6dl-g2h-13.dtb"
-#elif defined(CONFIG_SOLO_13f)
-#define CONFIG_DT "imx6dl-g2h-13f.dtb"
-#elif defined(CONFIG_SOLO_14)
-#define CONFIG_DT "imx6dl-g2h-14.dtb"
-#elif defined(CONFIG_SOLO_14f)
-#define CONFIG_DT "imx6dl-g2h-14f.dtb"
-#elif defined(CONFIG_SOLO_11f)
-#define CONFIG_DT "imx6dl-g2h-11f.dtb"
-#elif defined(CONFIG_SOLO_12f)
-#define CONFIG_DT "imx6dl-g2h-12f.dtb"
-#elif defined(CONFIG_SOLO_6)
-#define CONFIG_DT "imx6dl-g2h-6.dtb"
+#if defined(CONFIG_RD6_7P)
+#define CONFIG_DT "imx6dl-rd6-7p.dtb"
+#elif defined(CONFIG_RD6_7R)
+#define CONFIG_DT "imx6dl-rd6-7r.dtb"
+#elif defined(CONFIG_RD6_57R)
+#define CONFIG_DT "imx6dl-rd6-57r.dtb"
+#elif defined(CONFIG_RD6_57P)
+#define CONFIG_DT "imx6dl-rd6-57p.dtb"
+#elif defined(CONFIG_RD6_10P)
+#define CONFIG_DT "imx6dl-rd6-10p.dtb"
 #else
 #define CONFIG_DT ""
 #endif
-
-/* panel and touch options */
-#define EVERVISION_5_7    "test $touch_rev = EVERVISION && test $board_rev = LCD_5_7"
-#define RESISTIVE_5_7     "test $touch_rev = RESISTIVE && test $board_rev = LCD_5_7"
-
-#define EVERVISION_7    "test $touch_rev = EVERVISION && test $board_rev = LCD_7"
-#define RESISTIVE_7     "test $touch_rev = RESISTIVE && test $board_rev = LCD_7"
-
-#define EVERVISION_10_1 "test $touch_rev = EVERVISION && test $board_rev = LCD_10_1"
-#define RESISTIVE_10_1  "test $touch_rev = RESISTIVE && test $board_rev = LCD_10_1"
-
-#define RESISTIVE_10_4  "test $touch_rev = RESISTIVE && test $board_rev = LCD_10_4"
-
-#define BASE_IO "test $base_io = true"
-
-#define DIP_0 "test $board_dip = 0"
-#define DIP_1 "test $board_dip = 1"
-#define DIP_2 "test $board_dip = 2"
-#define DIP_3 "test $board_dip = 3"
-#define DIP_4 "test $board_dip = 4"
-#define DIP_5 "test $board_dip = 5"
-#define DIP_6 "test $board_dip = 6"
-#define DIP_7 "test $board_dip = 7"
 
 #ifdef CONFIG_BOOT_FROM_SPI
 #define CONFIG_BOOT_DEV "nandboot"
@@ -168,7 +133,7 @@
 
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"image=zImage\0" \
+	"image=boot/zImage\0" \
 	"fdt_addr=0x18000000\0" \
 	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
@@ -176,8 +141,8 @@
 	"console=" CONFIG_CONSOLE_DEV "\0" \
 	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
 	"mmcpart=1\0" \
-	"mmcroot=" CONFIG_MMCROOT " rootwait rw rootfstype=ext4\0" \
-    "fdt_image=" CONFIG_DT "\0" \
+	"mmcroot=" CONFIG_MMCROOT " rw rootfstype=ext4\0" \
+    "fdt_image=boot/" CONFIG_DT "\0" \
 	"update_sd_firmware=" \
 		"if test ${ip_dyn} = yes; then " \
 			"setenv get_cmd dhcp; " \
@@ -193,8 +158,8 @@
 		"fi\0" \
 	"mmcargs=setenv bootargs console=${console},${baudrate} " \
 		"root=${mmcroot} consoleblank=0 vt.global_cursor_default=0\0" \
-	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
-	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_image}\0" \
+	"loadimage=load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+	"loadfdt=load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_image}\0" \
 	"mmcboot=echo Booting from mmc ...; mmc dev ${mmcdev}; mmc rescan; " \
         "run loadimage; run loadfdt; run mmcargs; " \
             "bootz ${loadaddr} - ${fdt_addr}; \0" \
