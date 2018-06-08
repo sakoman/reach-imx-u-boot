@@ -79,7 +79,7 @@
 #define CONFIG_SYS_I2C_SPEED		  100000
 
 #define CONFIG_CONSOLE_DEV		"ttymxc0"
-#define CONFIG_MMCROOT			"/dev/mmcblk2p1"
+#define CONFIG_MMCROOT			"/dev/mmcblk0p1"
 
 /* Framebuffer */
 #define CONFIG_VIDEO_SHUTDOWN_LCD
