@@ -119,6 +119,8 @@
 #define CONFIG_DT "imx6dl-rd6-57p.dtb"
 #elif defined(CONFIG_RD6_10P)
 #define CONFIG_DT "imx6dl-rd6-10p.dtb"
+#elif defined(CONFIG_RD6_10U)
+#define CONFIG_DT "imx6dl-rd6-10u.dtb"
 #else
 #define CONFIG_DT ""
 #endif
