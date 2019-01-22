@@ -650,7 +650,7 @@ bool has_base_io(void)
     val |= ((gpio_get_value(DIP_PIN4)) ^ (1 << 0)) << 3;
 
     if (val == 0x8) {
-		setenv("board_dip", simple_itoa(val));
+		env_set("board_dip", simple_itoa(val));
 
         return true;
     }
@@ -660,7 +660,7 @@ bool has_base_io(void)
     val |= ((gpio_get_value(DIP_PIN2)) ^ (1 << 0)) << 1;
     val |= ((gpio_get_value(DIP_PIN3)) ^ (1 << 0)) << 2;
 
-	setenv("board_dip", simple_itoa(val));
+	env_set("board_dip", simple_itoa(val));
 
     return false;
 }
@@ -673,27 +673,27 @@ int board_late_init(void)
 
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 	if (has_evervision()) {
-		setenv("touch_rev", "EVERVISION");
+		env_set("touch_rev", "EVERVISION");
     } else {
-		setenv("touch_rev", "RESISTIVE");
+		env_set("touch_rev", "RESISTIVE");
     }
 
     if (has_base_io()) {
-		setenv("base_io", "true");
+		env_set("base_io", "true");
     } else {
-		setenv("base_io", "false");
+		env_set("base_io", "false");
     }
 #ifdef CONFIG_LCD_5_7
-	setenv("board_rev", "LCD_5_7");
+	env_set("board_rev", "LCD_5_7");
 #endif
 #ifdef CONFIG_LCD_7
-	setenv("board_rev", "LCD_7");
+	env_set("board_rev", "LCD_7");
 #endif
 #ifdef CONFIG_LCD_10_1
-	setenv("board_rev", "LCD_10_1");
+	env_set("board_rev", "LCD_10_1");
 #endif
 #ifdef CONFIG_LCD_10_4
-	setenv("board_rev", "LCD_10_4");
+	env_set("board_rev", "LCD_10_4");
 #endif
 
 #endif
@@ -744,7 +744,7 @@ void shutdown_lcd(void)
 
 static int do_dip(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
-	setenv_hex("dipswitch", board_dipswitch());
+	env_set_hex("dipswitch", board_dipswitch());
 
 	printf("dipswitch 0x%X\n", board_dipswitch());
 
