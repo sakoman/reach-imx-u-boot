@@ -11,11 +11,8 @@
 
 #include "mx6_common.h"
 #include <asm/arch/imx-regs.h>
-#include <asm/imx-common/gpio.h>
+#include <asm/mach-imx/gpio.h>
 #include <linux/sizes.h>
-
-#define CONFIG_DISPLAY_CPUINFO
-#define CONFIG_DISPLAY_BOARDINFO
 
 #define MACH_TYPE_HAWTHORNE		4901
 #define CONFIG_MACH_TYPE		MACH_TYPE_HAWTHORNE
@@ -23,53 +20,33 @@
 /* Size of malloc() pool */
 #define CONFIG_SYS_MALLOC_LEN		(10 * SZ_1M)
 
-#define CONFIG_BOARD_EARLY_INIT_F
 #define CONFIG_BOARD_LATE_INIT
 
-#define CONFIG_MXC_UART
 #define CONFIG_MXC_UART_BASE		UART1_BASE
-
-#define CONFIG_CMD_BMODE
 
 #define CONFIG_SYS_MEMTEST_START	0x10000000
 #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + 500 * SZ_1M)
 #define CONFIG_LOADADDR			0x12000000
-#define CONFIG_SYS_TEXT_BASE		0x17800000
 
 /* MMC Configuration */
-#define CONFIG_FSL_ESDHC
 #define CONFIG_FSL_USDHC
 #define CONFIG_SYS_FSL_USDHC_NUM	2
 #define CONFIG_SYS_FSL_ESDHC_ADDR	0
 
 /* Ethernet Configuration */
-#define CONFIG_CMD_PING
-#define CONFIG_CMD_DHCP
-#define CONFIG_CMD_MII
-#define CONFIG_FEC_MXC
-#define CONFIG_MII
 #define IMX_FEC_BASE			ENET_BASE_ADDR
 #define CONFIG_FEC_XCV_TYPE		RGMII
 #define CONFIG_ETHPRIME			"FEC"
 #define CONFIG_FEC_MXC_PHYADDR		1
-#define CONFIG_PHYLIB
-#define CONFIG_PHY_ATHEROS
 
 /* SPI NOR */
-#define CONFIG_CMD_SF
-#define CONFIG_SPI_FLASH
-#define CONFIG_SPI_FLASH_STMICRO
-#define CONFIG_MXC_SPI
 #define CONFIG_SF_DEFAULT_BUS		0
 #define CONFIG_SF_DEFAULT_CS		0
 #define CONFIG_SF_DEFAULT_SPEED		20000000
 #define CONFIG_SF_DEFAULT_MODE		SPI_MODE_0
 
 /* I2C Configs */
-#define CONFIG_CMD_I2C
 #define CONFIG_SYS_I2C
-#define CONFIG_SYS_I2C_MXC
-#define CONFIG_SYS_I2C_MXC_I2C1
 #define CONFIG_SYS_I2C_SPEED		  100000
 
 #define CONFIG_CONSOLE_DEV		"ttymxc0"
@@ -77,12 +54,6 @@
 
 /* Framebuffer */
 #define CONFIG_VIDEO_SHUTDOWN_LCD
-#define CONFIG_VIDEO
-#define CONFIG_VIDEO_IPUV3
-#define CONFIG_CFB_CONSOLE
-#define CONFIG_VGA_AS_SINGLE_DEVICE
-#define CONFIG_SYS_CONSOLE_IS_IN_ENV
-#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
 #define CONFIG_VIDEO_BMP_RLE8
 #define CONFIG_SPLASH_SCREEN
 #define CONFIG_SPLASH_SCREEN_ALIGN
@@ -93,34 +64,25 @@
 #define CONFIG_IMX_HDMI
 #define CONFIG_IMX_VIDEO_SKIP
 
-/* NAND flash command */
-#define CONFIG_CMD_NAND
-#define CONFIG_CMD_NAND_TRIMFFS
-
 /* NAND support */
-#define CONFIG_NAND_MXS
 #define CONFIG_SYS_MAX_NAND_DEVICE     1
 #define CONFIG_SYS_NAND_BASE           0x40000000
 #define CONFIG_SYS_NAND_5_ADDR_CYCLE
 #define CONFIG_SYS_NAND_ONFI_DETECTION
 
-#define CONFIG_APBH_DMA
-#define CONFIG_APBH_DMA_BURST
-#define CONFIG_APBH_DMA_BURST8
-
 /* kernel device tree options */
 #if defined(CONFIG_RD6_7P)
-#define CONFIG_DT "imx6dl-rd6-7p.dtb"
+#define CONFIG_DT "imx6dl-g2h-7p.dtb"
 #elif defined(CONFIG_RD6_7R)
-#define CONFIG_DT "imx6dl-rd6-7r.dtb"
+#define CONFIG_DT "imx6dl-g2h-7r.dtb"
 #elif defined(CONFIG_RD6_57R)
-#define CONFIG_DT "imx6dl-rd6-57r.dtb"
+#define CONFIG_DT "imx6dl-g2h-57r.dtb"
 #elif defined(CONFIG_RD6_57P)
-#define CONFIG_DT "imx6dl-rd6-57p.dtb"
+#define CONFIG_DT "imx6dl-g2h-57p.dtb"
 #elif defined(CONFIG_RD6_10P)
-#define CONFIG_DT "imx6dl-rd6-10p.dtb"
+#define CONFIG_DT "imx6dl-g2h-10p.dtb"
 #elif defined(CONFIG_RD6_10U)
-#define CONFIG_DT "imx6dl-rd6-10u.dtb"
+#define CONFIG_DT "imx6dl-g2h-10u.dtb"
 #else
 #define CONFIG_DT ""
 #endif
@@ -213,10 +175,7 @@
 
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
 
-#define CONFIG_CMDLINE_EDITING
-
 /* Physical Memory Map */
-#define CONFIG_NR_DRAM_BANKS		1
 #define PHYS_SDRAM			MMDC0_ARB_BASE_ADDR
 #define PHYS_SDRAM_SIZE			SZ_512M
 
@@ -247,8 +206,5 @@
 #define CONFIG_ENV_IS_IN_MMC
 #define CONFIG_ENV_OFFSET		(768 * 1024)
 #endif
-
-#define CONFIG_OF_LIBFDT
-#define CONFIG_CMD_BOOTZ
 
 #endif			       /* __CONFIG_H * */
