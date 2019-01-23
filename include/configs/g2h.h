@@ -160,8 +160,8 @@
 		"fi\0" \
 	"mmcargs=setenv bootargs console=${console},${baudrate} " \
 		"root=${mmcroot} consoleblank=0 vt.global_cursor_default=0\0" \
-	"loadimage=load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
-	"loadfdt=load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_image}\0" \
+	"loadimage=ext4load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+	"loadfdt=ext4load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_image}\0" \
 	"mmcboot=echo Booting from mmc ...; mmc dev ${mmcdev}; mmc rescan; " \
         "run loadimage; run loadfdt; run mmcargs; " \
             "bootz ${loadaddr} - ${fdt_addr}; \0" \
