@@ -94,6 +94,8 @@
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"image=boot/zImage\0" \
+	"splash=/boot/splash.bmp\0" \
+	"splashpos=m,m\0" \
 	"fdt_addr=0x18000000\0" \
 	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
@@ -166,7 +168,11 @@
     "rescue_sd_boot=echo Rescue boot ...; run rescue_args; run load_sd_rescue_image; " \
         "run loadimage; run loadfdt; bootz ${loadaddr} - ${fdt_addr}; \0" \
 
-#define CONFIG_BOOTCOMMAND "setenv panel ${board_rev}; run check_update; "
+#define CONFIG_BOOTCOMMAND \
+    "setenv panel ${board_rev}; " \
+    "load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${splash}; " \
+    "bmp display ${loadaddr}; " \
+    "run check_update; "
 
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
 
