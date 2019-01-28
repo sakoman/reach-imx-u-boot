@@ -518,7 +518,7 @@ CONFIG_CMD_PING=y
 #
 # Misc commands
 #
-# CONFIG_CMD_BMP is not set
+CONFIG_CMD_BMP=y
 # CONFIG_CMD_BSP is not set
 # CONFIG_CMD_BKOPS_ENABLE is not set
 # CONFIG_CMD_CACHE is not set
