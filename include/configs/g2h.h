@@ -117,14 +117,14 @@
 				"mmc write ${loadaddr} 0x2 ${fw_sz}; " \
 			"fi; "	\
 		"fi\0" \
-	"mmcargs=setenv bootargs console=${console},${baudrate} " \
+	"mmcargs=setenv bootargs console=${console},${baudrate} quiet " \
 		"root=${mmcroot} consoleblank=0 vt.global_cursor_default=0\0" \
 	"loadimage=load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
 	"loadfdt=load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_image}\0" \
 	"mmcboot=echo Booting from mmc ...; mmc dev ${mmcdev}; mmc rescan; " \
         "run loadimage; run loadfdt; run mmcargs; " \
             "bootz ${loadaddr} - ${fdt_addr}; \0" \
-	"netargs=setenv bootargs console=${console},${baudrate} " \
+	"netargs=setenv bootargs console=${console},${baudrate} quiet " \
 		"root=/dev/nfs " \
 		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
 	"netboot=echo Booting from net ...; " \
@@ -150,7 +150,7 @@
 		"fi;\0" \
     "check_update=if test ${swupdate} = true; then run " CONFIG_RESCUE_BOOT "; " \
         "else run " CONFIG_BOOT_DEV "; fi; \0" \
-    "nandargs=setenv bootargs console=${console},${baudrate} " \
+    "nandargs=setenv bootargs console=${console},${baudrate} quiet " \
         "${nandroot} consoleblank=0 vt.global_cursor_default=0 \0" \
     "nandroot=ubi.mtd=2,2048 root=ubi0:rootfs0 rootfstype=ubifs \0" \
     "nandboot=echo Booting from nand ...; " \
@@ -163,7 +163,7 @@
     "rescue_image=rescue-image.ext3.gz \0" \
 	"load_sd_rescue_image=fatload mmc ${mmcdev}:${mmcpart} ${rescue_addr} ${rescue_image}\0" \
     "rescue_root=/dev/ram0 rw initrd=0x19000000,5M \0" \
-    "rescue_args=setenv bootargs console=${console},${baudrate} rdinit=/sbin/init " \
+    "rescue_args=setenv bootargs console=${console},${baudrate} quiet rdinit=/sbin/init " \
         "root=${rescue_root} consoleblank=0 vt.global_cursor_default=0 \0" \
     "rescue_sd_boot=echo Rescue boot ...; run rescue_args; run load_sd_rescue_image; " \
         "run loadimage; run loadfdt; bootz ${loadaddr} - ${fdt_addr}; \0" \
