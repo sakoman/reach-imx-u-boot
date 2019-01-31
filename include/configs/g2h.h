@@ -50,7 +50,6 @@
 #define CONFIG_SYS_I2C_SPEED		  100000
 
 #define CONFIG_CONSOLE_DEV		"ttymxc0"
-#define CONFIG_MMCROOT			"/dev/mmcblk2p1"
 
 /* Framebuffer */
 #define CONFIG_VIDEO_SHUTDOWN_LCD
@@ -87,29 +86,18 @@
 
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"image=boot/zImage\0" \
+	"fdt_addr_r=0x18000000\0" \
+	"kernel_addr_r=0x12000000\0" \
+	"console=" CONFIG_CONSOLE_DEV "\0" \
+	"bootargs=rw rootfstype=ext4 console=${console},${baudrate} " \
+		"consoleblank=0 vt.global_cursor_default=0\0" \
 	"splash=boot/splash.bmp\0" \
 	"splashpos=m,m\0" \
-	"fdt_addr=0x18000000\0" \
-	"boot_fdt=try\0" \
-	"console=" CONFIG_CONSOLE_DEV "\0" \
-	"mmcdev=" __stringify(CONFIG_SYS_MMC_ENV_DEV) "\0" \
-	"mmcpart=1\0" \
-	"mmcroot=" CONFIG_MMCROOT " rw rootfstype=ext4\0" \
-	"fdt_image=boot/" CONFIG_DT "\0" \
-	"mmcargs=setenv bootargs console=${console},${baudrate} quiet " \
-		"root=${mmcroot} consoleblank=0 vt.global_cursor_default=0\0" \
-	"loadimage=load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
-	"loadfdt=load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_image}\0" \
-	"mmcboot=echo Booting from mmc ...; mmc dev ${mmcdev}; mmc rescan; " \
-        "run loadimage; run loadfdt; run mmcargs; " \
-            "bootz ${loadaddr} - ${fdt_addr}; \0" \
+	"mender_pre_setup_commands=setenv panel ${board_rev}; " \
+		"load mmc ${mender_uboot_dev}:${mender_boot_part} ${kernel_addr_r} ${splash}; " \
+		"bmp display ${kernel_addr_r};\0 " \
 
-#define CONFIG_BOOTCOMMAND \
-    "setenv panel ${board_rev}; " \
-    "load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${splash}; " \
-    "bmp display ${loadaddr}; " \
-    "run mmcboot; "
+#define CONFIG_BOOTCOMMAND	""
 
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
 
@@ -142,7 +130,7 @@
 #define CONFIG_ENV_SPI_MAX_HZ		CONFIG_SF_DEFAULT_SPEED
 #else
 #define CONFIG_ENV_IS_IN_MMC
-#define CONFIG_ENV_OFFSET		(768 * 1024)
+#define CONFIG_ENV_OFFSET		(1024 * 1024)
 #endif
 
 #endif			       /* __CONFIG_H * */
