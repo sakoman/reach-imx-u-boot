@@ -89,7 +89,7 @@
 	"fdt_addr_r=0x18000000\0" \
 	"kernel_addr_r=0x12000000\0" \
 	"console=" CONFIG_CONSOLE_DEV "\0" \
-	"bootargs=rw rootfstype=ext4 console=${console},${baudrate} " \
+	"bootargs=rw rootfstype=ext4 console=${console},${baudrate} quiet " \
 		"consoleblank=0 vt.global_cursor_default=0\0" \
 	"splash=boot/splash.bmp\0" \
 	"splashpos=m,m\0" \
